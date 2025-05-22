@@ -11,22 +11,26 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-            User::factory()->create([
-            'name' => 'admin',
-            'email' => 'test@gmail.com'
-        ]);
-      $categories = ['Technology', 'Health', 'Travel', 'Food', 'Lifestyle'];
-      foreach ($categories as $category){
-        Category::create(['name'=>$category]);
-
-      }
-      Post::factory(100)->create();
-
-
+  /**
+   * Seed the application's database.
+   */
+  public function run(): void
+  {
+    User::factory()->create([
+      'name' => 'admin',
+      'email' => 'test@gmail.com'
+    ]);
+    $categories = [
+      'Technology',
+      'Health',
+      'Science',
+      'Sports',
+      'Politics',
+      'Entertainment',
+    ];
+    foreach ($categories as $category) {
+      Category::create(['name' => $category]);
     }
+    Post::factory(100)->create();
+  }
 }
