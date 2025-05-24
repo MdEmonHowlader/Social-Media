@@ -8,12 +8,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/create', [PostController::class, 'create'])->name('post.create');
+    Route::get('/', [PostController::class, 'index'])->name('dashboard');
+
+    Route::post('/store', [PostController::class, 'store'])->name('post.store');
+    Route::get('/edit/{id}', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('/update/{id}', [PostController::class, 'update'])->name('post.update');
+    Route::delete('/delete/{id}', [PostController::class, 'destroy'])->name('post.delete');
+    
 });
 
 require __DIR__.'/auth.php';

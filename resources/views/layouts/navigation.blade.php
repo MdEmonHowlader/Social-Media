@@ -18,8 +18,14 @@
                     </x-nav-link>
                 </div>
             </div>
-
-            <!-- Settings Dropdown -->
+            
+            <div class="flex">
+                <a href="{{ route('post.create') }}" class="flex items-center">
+                    <x-primary-button>
+                        Create Post
+                    </x-primary-button>
+                </a>
+                     <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -70,6 +76,9 @@
                     </svg>
                 </button>
             </div>
+            </div>
+
+       
         </div>
     </div>
 
