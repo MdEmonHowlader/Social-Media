@@ -42,7 +42,7 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $image= $data['image'];
-        unset($data['image']);
+        // unset($data['image']);
         $data['slug'] = Str::slug($data['title']);
         $data['user_id'] = Auth::id();
 
