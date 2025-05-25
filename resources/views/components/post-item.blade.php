@@ -19,7 +19,7 @@
             </a>
         </div>
         <a href="#">
-            <img class= " w-48 h-full object-cover rounded-t-lg" src="https://flowbite.com/docs/images/blog/image-1.jpg"
+            <img class= " w-48 h-full object-cover rounded-t-lg" src="{{ Storage::url($post->image) }}"
                 alt="" />
         </a>
     </div>

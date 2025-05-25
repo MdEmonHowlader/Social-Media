@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -36,24 +38,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $data= $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'published_at' => 'nullable|date',
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'published_at' => ['date', 'nullable']
+
         ]);
-        dd($request->all());
+        $image= $data['image'];
+        unset($data['image']);
+        $data['slug'] = Str::slug($data['title']);
+        $data['user_id'] = Auth::id();
 
-        $post = new Post();
-        $post->title = $request->input('title');
-        $post->content = $request->input('content');
-        $post->category_id = $request->input('category_id');
-        $post->image = $request->file('image')->store('images', 'public');
-        $post->published_at = $request->input('published_at');
-        $post->save();
+        $imagePath = $image->store('posts', 'public');
+        $data['image'] = $imagePath;
 
-        return redirect()->route('post.index')->with('success', 'Post created successfully.');
+         Post::create($data);
+         return redirect()->route('dashboard');
+
+       
     }
 
     /**

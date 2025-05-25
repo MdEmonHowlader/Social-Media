@@ -28,22 +28,22 @@
                                     {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}</option>
                             @endforeach
-                            
+
                         </select>
                         <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
                     </div>
-                    <div class="mt-4"> 
+                    <div class="mt-4">
                         <x-input-label for="image" :value="__('Image')" />
                         <x-text-input id="image" class="block mt-1 w-full" type="file" name="image"
                             :value="old('image')" autofocus />
                         <x-input-error :messages="$errors->get('image')" class="mt-2" />
                     </div>
-                             <div class="mt-4">
+                    {{-- <div class="mt-4">
                         <x-input-label for="published_at" :value="__('Published At')" />
-                        <x-text-input id="published_at" class="block mt-1 w-full" type="datetime-local" name="published_at"
-                            :value="old('published_at')" autofocus />
+                        <x-text-input id="published_at" class="block mt-1 w-full" type="datetime-local"
+                            name="published_at" :value="old('published_at')" autofocus />
                         <x-input-error :messages="$errors->get('published_at')" class="mt-2" />
-                    </div>
+                    </div> --}}
 
                     <x-primary-button class="mt-4">
                         Submit
