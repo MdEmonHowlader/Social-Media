@@ -15,15 +15,20 @@
                     @endif
 
                 </div>
-                <h3>{{ $post->user->name }}</h3>
                 <div class="flex gap-2">
-                    <span class="text-gray-500 text-sm">
-                       
-                        {{ $post->readTime() }} min read
-                    </span>
+                     <h3>{{ $post->user->name }}</h3>
+                     &middot;
+                     <a href="#" class="text-blue-500 hover:underline">
+                        Follow
+                     </a>
                 </div>
-             
-                
+               
+                <div class="flex gap-2 text-gray-500 text-sm">
+                        {{ $post->readTime() }} min read
+                    &middot;
+                        {{ $post->created_at->format('M d, Y')  }}
+
+                </div>
             </div>
         </div>
     </div>
