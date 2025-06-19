@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\PublicProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/delete/{id}', [PostController::class, 'destroy'])->name('post.delete');
 
     Route::get('/@{username}/{post:slug}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('profile.show');
 
 });
 
