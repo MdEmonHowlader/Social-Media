@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,8 @@ class PublicProfileController extends Controller
            
         // ]);
           $users = User::all();
-    return view('profile.show', compact('users', 'user'));
+          $posts = Post::all();
+           
+    return view('profile.show', compact('users', 'user', 'posts'));
     }
 }
