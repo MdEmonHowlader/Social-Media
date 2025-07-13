@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicProfileController;
+use App\Http\Controllers\FollowController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/@{username}/{post:slug}', [PostController::class, 'show'])->name('post.show');
     Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('profile.show');
+
+    Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follow');
+    Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
 
 });
 
