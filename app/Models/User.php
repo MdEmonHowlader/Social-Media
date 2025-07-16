@@ -50,31 +50,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-/**
-     * Get the posts for the user.
-     */
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
-    /**
-     * Get the followers for the user.
-     */
     public function followers()
     {
         return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
     }
-    /**
-     * Get the users that the user is following.
-     */
     public function following()
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
-
-    /**
-     * Check if the current user is following another user.
-     */
     public function isFollowing(User $user)
     {
         return $this->following()->where('user_id', $user->id)->exists();

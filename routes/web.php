@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/@{username}/{post:slug}', [PostController::class, 'show'])->name('post.show');
     Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('profile.show');
 
+    Route::get('/categories/{category}', [PostController::class, 'category'])->name('post.category');
+
     Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follow');
     Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
 
