@@ -11,7 +11,7 @@
                                 <x-post-item :post="$post"></x-post-item>
                             @empty
                                 <div class="text-center">
-                                    <p class="text-gray-500 py-16">No posts available.</p>
+                                    <p class="text-gray-500 py-16">All available.</p>
                                 </div>
                             @endforelse
                         </div>
