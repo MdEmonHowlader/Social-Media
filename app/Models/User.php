@@ -73,4 +73,8 @@ class User extends Authenticatable
         }
         return null;
     }
+    public function hasClapped(Post $post)
+    {
+        return $post->claps()->where('user_id', $this->id)->exists();
+    }
 }

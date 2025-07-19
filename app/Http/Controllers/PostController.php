@@ -57,7 +57,10 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified post.
+     *
+     * @param  string  $postId
+     * @return \Illuminate\View\View
      */
     public function show(string $username, Post $post)
     {

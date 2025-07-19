@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\PostClapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follow');
     Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
+    Route::post('/posts/{post}/clap', [PostClapController::class, 'clap'])->name('clap');
 
 });
 

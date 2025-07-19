@@ -42,7 +42,6 @@
                     @endauth
                 </div>
 
-
                 <div class="flex gap-2 text-gray-500 text-sm">
                     {{ $post->readTime() }} min read
                     &middot;
@@ -57,9 +56,9 @@
                     </div>
                 </div>
                 {{-- Clap section --}}
-                <x-clap-button :post="$post->claps()->count()" />
+                <x-clap-button :post="$post" />
                 <div>
-                    <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full ">{{ $post->category->name }}</button>
+                    <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full "></button>
                 </div>
 
             </div>
