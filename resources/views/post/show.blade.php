@@ -5,6 +5,11 @@
                 <h1 class="text-5xl mb-4">
                     {{ $post->title }}
                 </h1>
+                @if ($post->category)
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full mb-4">
+                        {{ $post->category->name }}
+                    </span>
+                @endif
                 <div class="flex gap-4">
 
                     {{-- <div class="flex flex-col">
@@ -57,9 +62,9 @@
                 </div>
                 {{-- Clap section --}}
                 <x-clap-button :post="$post" />
-                <div>
-                    <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full "></button>
-                </div>
+                {{-- <div>
+                    <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full ">{{ $post ->category->name }}</button>
+                </div> --}}
 
             </div>
         </div>

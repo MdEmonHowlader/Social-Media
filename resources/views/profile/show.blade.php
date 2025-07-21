@@ -14,7 +14,8 @@
                                     <p class="text-gray-500 py-16">All available.</p>
                                 </div>
                             @endforelse
-                        </div>
+                        </div> 
+                        
                     </div>
                         <div class="w-[320px] border-l px-8">
                             <x-user-avatar :user="$user" size="w-24 h-24" />
@@ -35,9 +36,6 @@
                                     <button class="bg-blue-500 text-white px-4 py-2 rounded">Follow</button>
                                 </form>
                             @endif
-
-
-
                         </div>
                     </div>
                 </div>

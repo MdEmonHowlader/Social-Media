@@ -6,6 +6,7 @@
            count: {{ $post->claps()->count() }},
            clap() {
                axios.post('/posts/{{ $post->id }}/clap').then(response => {
+                     this.hasClapped = !this.hasClapped;
                        this.count = response.data.count;
                    })
                    .catch(error => {
@@ -38,7 +39,7 @@
                1.2k
            </button>
        </div>
-       <div class="flex gap-4  items-center">
+       {{-- <div class="flex gap-4  items-center">
            <button class="flex gap-2 text-gray-500 hover:text-gray-900">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                    stroke="currentColor" class="size-6">
@@ -46,7 +47,7 @@
                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                </svg>
 
-               {{-- {{ $post->views }} --}}
+               
            </button>
            <button class="flex gap-2 items-center">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -55,8 +56,6 @@
                    <path stroke-linecap="round" stroke-linejoin="round"
                        d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z" />
                </svg>
-
-               {{ is_object($post) && isset($post->user) ? $post->user->followers_count ?? 0 : 0 }}
            </button>
            <button class="flex gap-2 items-center">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -64,7 +63,7 @@
                    <path stroke-linecap="round" stroke-linejoin="round"
                        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                </svg>
-               {{ is_object($post) && isset($post->user) ? $post->user->following_count ?? 0 : 0 }}
+             
            </button>
            <button class="flex gap-2 items-center">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" height="24" width="24" viewBox="0 0 24 24"
@@ -73,8 +72,8 @@
                        d="M4.385 12c0 .55.2 1.02.59 1.41.39.4.86.59 1.41.59s1.02-.2 1.41-.59c.4-.39.59-.86.59-1.41s-.2-1.02-.59-1.41a1.93 1.93 0 0 0-1.41-.59c-.55 0-1.02.2-1.41.59-.4.39-.59.86-.59 1.41m5.62 0c0 .55.2 1.02.58 1.41.4.4.87.59 1.42.59s1.02-.2 1.41-.59c.4-.39.59-.86.59-1.41s-.2-1.02-.59-1.41a1.93 1.93 0 0 0-1.41-.59c-.55 0-1.03.2-1.42.59s-.58.86-.58 1.41m5.6 0c0 .55.2 1.02.58 1.41.4.4.87.59 1.43.59s1.03-.2 1.42-.59.58-.86.58-1.41-.2-1.02-.58-1.41a1.93 1.93 0 0 0-1.42-.59c-.56 0-1.04.2-1.43.59s-.58.86-.58 1.41"
                        clip-rule="evenodd"></path>
                </svg>
-               {{ is_object($post) && isset($post->user) ? $post->user->posts_count ?? 0 : 0 }}
+               
            </button>
 
-       </div>
+       </div> --}}
    </div>
