@@ -19,30 +19,32 @@
 
                 </div>
                 <div class="flex gap-2 items-center">
-                    <a href="{{ route('profile.show', $post->user) }}" class="hover:underline">
+                    <a href="{{ route('profile.show', $post->user->username) }}" class="hover:underline">
                         {{ $post->user->name }}
                     </a>
                     &middot;
                     @auth
-                        @php
-                            $isFollowing = auth()->user()->following->contains($post->user);
-                        @endphp
+                        @if (auth()->id() !== $post->user->id)
+                            @php
+                                $isFollowing = auth()->user()->following->contains($post->user);
+                            @endphp
 
-                        @if ($isFollowing)
-                            <form action="{{ route('unfollow', $post->user) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-gray-500 hover:underline">
-                                    Unfollow
-                                </button>
-                            </form>
-                        @else
-                            <form action="{{ route('follow', $post->user) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="text-blue-500 hover:underline">
-                                    Follow
-                                </button>
-                            </form>
+                            @if ($isFollowing)
+                                <form action="{{ route('unfollow', $post->user) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-gray-500 hover:underline">
+                                        Unfollow
+                                    </button>
+                                </form>
+                            @else
+                                <form action="{{ route('follow', $post->user) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="text-blue-500 hover:underline">
+                                        Follow
+                                    </button>
+                                </form>
+                            @endif
                         @endif
                     @endauth
                 </div>

@@ -3,22 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class PublicProfileController extends Controller
 {
-public function show(Request $request)
-{
-    $user = $request->user();
+    public function show(Request $request, $username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
 
-    if (!$user) {
-        abort(403, 'You must be logged in.');
+        $posts = $user->posts()->latest()->paginate();
+
+        return view('profile.show', [
+            'user' => $user,
+            'posts' => $posts,
+        ]);
     }
-
-    $posts = $user->posts()->latest()->paginate();
-
-    return view('profile.show', [
-        'user' => $user,
-        'posts' => $posts,
-    ]);
-}
 }
