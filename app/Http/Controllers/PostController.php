@@ -17,12 +17,12 @@ class PostController extends Controller
      */
     public function index()
     {
-       
+
         $posts = Post::orderBy('created_at', 'DESC')->simplePaginate(5);
-        
-       return view('post.index',[
-           'posts'=>$posts,
-       ]);
+
+        return view('post.index', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -42,7 +42,7 @@ class PostController extends Controller
     public function store(PostCreateRequest $request)
     {
         $data = $request->validated();
-        $image= $data['image'];
+        $image = $data['image'];
         // unset($data['image']);
         $data['slug'] = Str::slug($data['title']);
         $data['user_id'] = Auth::id();
@@ -50,10 +50,8 @@ class PostController extends Controller
         $imagePath = $image->store('posts', 'public');
         $data['image'] = $imagePath;
 
-         Post::create($data);
-         return redirect()->route('dashboard');
-
-       
+        Post::create($data);
+        return redirect()->route('dashboard');
     }
 
     /**
