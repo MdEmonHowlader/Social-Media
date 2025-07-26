@@ -18,4 +18,24 @@ class PublicProfileController extends Controller
             'posts' => $posts,
         ]);
     }
+
+    public function following(User $user)
+    {
+        $following = $user->following()->paginate(20);
+
+        return view('profile.following', [
+            'user' => $user,
+            'following' => $following,
+        ]);
+    }
+
+    public function followers(User $user)
+    {
+        $followers = $user->followers()->paginate(20);
+
+        return view('profile.followers', [
+            'user' => $user,
+            'followers' => $followers,
+        ]);
+    }
 }
