@@ -19,8 +19,10 @@ class PublicProfileController extends Controller
         ]);
     }
 
-    public function following(User $user)
+    public function following(Request $request, $username)
     {
+        $user = User::where('username', $username)->firstOrFail();
+
         $following = $user->following()->paginate(20);
 
         return view('profile.following', [
@@ -28,9 +30,10 @@ class PublicProfileController extends Controller
             'following' => $following,
         ]);
     }
-
-    public function followers(User $user)
+    public function followers(Request $request, $username)
     {
+        $user = User::where('username', $username)->firstOrFail();
+
         $followers = $user->followers()->paginate(20);
 
         return view('profile.followers', [
