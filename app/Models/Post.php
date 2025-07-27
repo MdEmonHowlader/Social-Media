@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Comment;
 
 class Post extends Model
 {
@@ -31,6 +32,11 @@ class Post extends Model
     public function claps()
     {
         return $this->hasMany(Clap::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->latest();
     }
 
     public function readTime($wordsPerMinute = 100)

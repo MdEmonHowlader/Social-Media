@@ -17,7 +17,9 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Post::orderBy('created_at', 'DESC');
+        $query = Post::with(['user', 'category'])
+            ->withCount(['claps', 'comments'])
+            ->orderBy('created_at', 'DESC');
 
         // If category filter is provided
         if ($request->has('category') && $request->category) {
@@ -38,7 +40,9 @@ class PostController extends Controller
      */
     public function category(Category $category)
     {
-        $posts = Post::where('category_id', $category->id)
+        $posts = Post::with(['user', 'category'])
+            ->withCount(['claps', 'comments'])
+            ->where('category_id', $category->id)
             ->orderBy('created_at', 'DESC')
             ->simplePaginate(5);
 
@@ -85,6 +89,8 @@ class PostController extends Controller
      */
     public function show(string $username, Post $post)
     {
+        $post->load(['comments.user']);
+
         return view('post.show', [
             'post' => $post,
         ]);

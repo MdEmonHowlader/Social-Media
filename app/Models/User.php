@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
@@ -67,8 +68,9 @@ class User extends Authenticatable
         return $this->following()->where('user_id', $user->id)->exists();
     }
 
-    public function imageUrl(){
-        if($this->image){
+    public function imageUrl()
+    {
+        if ($this->image) {
             return Storage::url($this->image);
         }
         return null;
@@ -76,5 +78,10 @@ class User extends Authenticatable
     public function hasClapped(Post $post)
     {
         return $post->claps()->where('user_id', $this->id)->exists();
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
