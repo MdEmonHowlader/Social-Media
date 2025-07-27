@@ -8,14 +8,21 @@ use App\Http\Controllers\PostClapController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
+// Admin routes - protected by admin middleware
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/categories', [AdminController::class, 'categories'])->name('categories');
+    Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
+    Route::put('/categories/{category}', [AdminController::class, 'updateCategory'])->name('categories.update');
+    Route::delete('/categories/{category}', [AdminController::class, 'deleteCategory'])->name('categories.delete');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,6 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/@{username}/followers', [PublicProfileController::class, 'followers'])->name('followers');
 
     Route::get('/categories/{category}', [PostController::class, 'category'])->name('post.category');
+    Route::get('/categories', [PostController::class, 'categoriesPage'])->name('categories.page');
 
     Route::post('/@{username}/follow', [FollowController::class, 'store'])->name('follow');
     Route::delete('/@{username}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');

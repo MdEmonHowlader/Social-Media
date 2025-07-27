@@ -17,11 +17,19 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('POSTS') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
+                        {{ __('CATEGORIES') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                         {{ __('CONTACT') }}
                     </x-nav-link>
-
-
+                    @auth
+                        @if (Auth::user()->isAdmin())
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                                {{ __('ADMIN') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -31,6 +39,7 @@
                         Create Post
                     </x-primary-button>
                 </a>
+
                 <!-- Settings Dropdown -->
                 @auth
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -55,6 +64,12 @@
                                 <x-dropdown-link :href="route('profile.edit')">
                                     {{ __('Profile') }}
                                 </x-dropdown-link>
+
+                                @if (Auth::user()->isAdmin())
+                                    <x-dropdown-link :href="route('admin.dashboard')">
+                                        {{ __('Admin Panel') }}
+                                    </x-dropdown-link>
+                                @endif
 
                                 <!-- Authentication -->
                                 <form method="POST" action="{{ route('logout') }}">
@@ -106,9 +121,19 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
+                {{ __('Categories') }}
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                 {{ __('Contact') }}
             </x-responsive-nav-link>
+            @auth
+                @if (Auth::user()->isAdmin())
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                        {{ __('Admin Panel') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
         @auth
             <div class="pt-4 pb-1 border-t border-gray-200">
@@ -121,6 +146,12 @@
                     <x-responsive-nav-link :href="route('profile.edit')">
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
+
+                    @if (Auth::user()->isAdmin())
+                        <x-responsive-nav-link :href="route('admin.dashboard')">
+                            {{ __('Admin Panel') }}
+                        </x-responsive-nav-link>
+                    @endif
 
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">

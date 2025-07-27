@@ -53,14 +53,43 @@ class PostController extends Controller
     }
 
     /**
+     * Display categories page with filtering options.
+     */
+    public function categoriesPage(Request $request)
+    {
+        $categories = Category::withCount('posts')->orderBy('name')->get();
+        $totalPosts = Post::count(); // Get total count of all posts
+
+        $query = Post::with(['user', 'category'])
+            ->withCount(['claps', 'comments'])
+            ->orderBy('created_at', 'DESC');
+
+        // If category filter is provided
+        if ($request->has('category') && $request->category) {
+            $query->where('category_id', $request->category);
+            $selectedCategory = $request->category;
+        } else {
+            $selectedCategory = null;
+        }
+
+        $posts = $query->simplePaginate(10);
+        $posts->appends($request->query());
+
+        return view('categories.index', [
+            'categories' => $categories,
+            'posts' => $posts,
+            'selectedCategory' => $selectedCategory,
+            'totalPosts' => $totalPosts,
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        $categories = Category::all();
-        return view('post.create', [
-            'categories' => $categories
-        ]);
+        $categories = Category::get();
+        return view('post.create', compact('categories'));
     }
 
     /**
@@ -68,28 +97,26 @@ class PostController extends Controller
      */
     public function store(PostCreateRequest $request)
     {
-        $data = $request->validated();
-        $image = $data['image'];
-        // unset($data['image']);
-        $data['slug'] = Str::slug($data['title']);
-        $data['user_id'] = Auth::id();
+        $validated = $request->validated();
+        $validated['user_id'] = Auth::id();
+        $validated['slug'] = Str::slug($validated['title']);
 
-        $imagePath = $image->store('posts', 'public');
-        $data['image'] = $imagePath;
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('images', 'public');
+        }
 
-        Post::create($data);
-        return redirect()->route('dashboard');
+        Post::create($validated);
+
+        return redirect()->route('dashboard')->with('success', 'Post created successfully!');
     }
 
     /**
-     * Display the specified post.
-     *
-     * @param  string  $postId
-     * @return \Illuminate\View\View
+     * Display the specified resource.
      */
-    public function show(string $username, Post $post)
+    public function show(Post $post)
     {
-        $post->load(['comments.user']);
+        $post->load(['user', 'category']);
+        $post->loadCount(['claps', 'comments']);
 
         return view('post.show', [
             'post' => $post,

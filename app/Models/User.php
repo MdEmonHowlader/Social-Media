@@ -27,6 +27,7 @@ class User extends Authenticatable
         'bio',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -51,6 +52,39 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if user is regular user
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user' || $this->role === null;
+    }
+
+    /**
+     * Make user admin
+     */
+    public function makeAdmin(): void
+    {
+        $this->update(['role' => 'admin']);
+    }
+
+    /**
+     * Make user regular user
+     */
+    public function makeUser(): void
+    {
+        $this->update(['role' => 'user']);
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);

