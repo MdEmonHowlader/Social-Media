@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follow');
     Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
     Route::post('/posts/{post}/clap', [PostClapController::class, 'clap'])->name('clap');
+    Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });

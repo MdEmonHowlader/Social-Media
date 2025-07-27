@@ -53,8 +53,10 @@
                     {{ $post->readTime() }} min read
                     &middot;
                     {{ $post->created_at->format('M d, Y') }}
+                   
 
                 </div>
+                <x-clap-button :post="$post" />
 
                 <div class="mt-8">
                     <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}">
@@ -63,7 +65,7 @@
                     </div>
                 </div>
                 {{-- Clap section --}}
-                <x-clap-button :post="$post" />
+               
                 {{-- <div>
                     <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full ">{{ $post ->category->name }}</button>
                 </div> --}}

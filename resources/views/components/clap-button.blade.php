@@ -33,69 +33,8 @@
                 <span x-text="count"></span>
             </button>
 
-            <div x-data="{
-                showComments: false,
-                commentsCount: {{ $post->comments()->count() }},
-                newComment: '',
-                comments: [],
-                isLoading: false,
-            
-                toggleComments() {
-                    this.showComments = !this.showComments;
-                    if (this.showComments && this.comments.length === 0) {
-                        this.loadComments();
-                    }
-                },
-            
-                loadComments() {
-                    this.comments = @json(
-                        $post->comments->map(function ($comment) {
-                            return [
-                                'id' => $comment->id,
-                                'content' => $comment->content,
-                                'user' => [
-                                    'name' => $comment->user->name,
-                                    'username' => $comment->user->username,
-                                ],
-                                'created_at' => $comment->created_at->diffForHumans(),
-                                'can_delete' => auth()->id() === $comment->user_id,
-                            ];
-                        })
-                        ->toJson();
-                   
-                },
-            
-                submitComment() {
-                    if (!this.newComment.trim()) return;
-            
-                    this.isLoading = true;
-                    axios.post('/posts/{{ $post->id }}/comments', {
-                        content: this.newComment
-                    }).then((response) => {
-                        this.comments.unshift(response.data.comment);
-                        this.commentsCount = response.data.total_comments;
-                        this.newComment = '';
-                    }).catch(error => {
-                        console.error('Error:', error);
-                        alert('Failed to add comment. Please try again.');
-                    }).finally(() => {
-                        this.isLoading = false;
-                    });
-                },
-            
-                deleteComment(commentId) {
-                    if (!confirm('Are you sure you want to delete this comment?')) return;
-            
-                    axios.delete('/comments/' + commentId).then((response) => {
-                        this.comments = this.comments.filter(c => c.id !== commentId);
-                        this.commentsCount = response.data.total_comments;
-                    }).catch(error => {
-                        console.error('Error:', error);
-                        alert('Failed to delete comment. Please try again.');
-                    });
-                }
-            }" class="flex flex-col">
-                <button class="flex gap-2 text-gray-500 hover:text-gray-900" @click="toggleComments()">
+            <div x-data="commentSystem({{ $post->id }}, {{ $post->comments()->count() }})" class="flex flex-col">
+                <button class="flex gap-2 text-gray-500 hover:text-gray-900" @click="toggle()">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -118,7 +57,7 @@
                                     class="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     rows="3" @keydown.ctrl.enter="submitComment()"></textarea>
                                 <div class="flex justify-between items-center mt-2">
-                                    <span class="text-sm text-gray-500">Press Ctrl + Enter to post</span>
+                                    {{-- <span class="text-sm text-gray-500">Press Ctrl + Enter to post</span> --}}
                                     <button @click="submitComment()" :disabled="!newComment.trim() || isLoading"
                                         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed">
                                         <span x-show="!isLoading">Post Comment</span>

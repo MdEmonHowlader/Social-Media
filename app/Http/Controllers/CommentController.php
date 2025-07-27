@@ -10,6 +10,29 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     /**
+     * Get comments for a post.
+     */
+    public function index(Post $post)
+    {
+        $comments = $post->comments()->with('user')->latest()->get()->map(function ($comment) {
+            return [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'user' => [
+                    'name' => $comment->user->name,
+                    'username' => $comment->user->username,
+                ],
+                'created_at' => $comment->created_at->diffForHumans(),
+                'can_delete' => Auth::id() === $comment->user_id,
+            ];
+        });
+
+        return response()->json([
+            'comments' => $comments,
+        ]);
+    }
+
+    /**
      * Store a newly created comment.
      */
     public function store(Request $request, Post $post)
