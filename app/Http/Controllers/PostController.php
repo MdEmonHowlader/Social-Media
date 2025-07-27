@@ -15,13 +15,36 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Post::orderBy('created_at', 'DESC');
 
-        $posts = Post::orderBy('created_at', 'DESC')->simplePaginate(5);
+        // If category filter is provided
+        if ($request->has('category') && $request->category) {
+            $query->where('category_id', $request->category);
+        }
+
+        $posts = $query->simplePaginate(5);
+        $posts->appends($request->query());
 
         return view('post.index', [
             'posts' => $posts,
+            'selectedCategory' => $request->category,
+        ]);
+    }
+
+    /**
+     * Display posts by category.
+     */
+    public function category(Category $category)
+    {
+        $posts = Post::where('category_id', $category->id)
+            ->orderBy('created_at', 'DESC')
+            ->simplePaginate(5);
+
+        return view('post.index', [
+            'posts' => $posts,
+            'selectedCategory' => $category->id,
         ]);
     }
 

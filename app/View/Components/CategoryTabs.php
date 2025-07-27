@@ -9,12 +9,14 @@ use App\Models\Category;
 
 class CategoryTabs extends Component
 {
+    public $selectedCategory;
+
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct($selectedCategory = null)
     {
-        //
+        $this->selectedCategory = $selectedCategory;
     }
 
     /**
@@ -22,10 +24,10 @@ class CategoryTabs extends Component
      */
     public function render(): View|Closure|string
     {
-         $categories =Category::get();
-        return view('components.category-tabs',
-        [
-            'categories'=>$categories,
+        $categories = Category::get();
+        return view('components.category-tabs', [
+            'categories' => $categories,
+            'selectedCategory' => $this->selectedCategory,
         ]);
     }
 }
