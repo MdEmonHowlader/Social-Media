@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ expanded: false }">
     <div class="flex bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 mb-8">
         <div class="p-5 flex-1">
             <a
@@ -7,9 +7,28 @@
                     'post' => $post,
                 ]) }}">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {{ $post->title }}</h5>
+                    {{ $post->title }}
+                </h5>
             </a>
-            <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ Str::words($post->content, 20) }}
+
+            {{-- Content with Read More functionality --}}
+            <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                <div x-show="!expanded">
+                    {{ Str::words($post->content, 20) }}
+                    @if (str_word_count(strip_tags($post->content)) > 20)
+                        <button @click="expanded = true" class="text-blue-600 hover:text-blue-800 font-medium ml-1">
+                            Read more...
+                        </button>
+                    @endif
+                </div>
+
+                <div x-show="expanded" x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                    {{ $post->content }}
+                    <button @click="expanded = false" class="text-blue-600 hover:text-blue-800 font-medium ml-2">
+                        Show less
+                    </button>
+                </div>
             </div>
 
             {{-- Engagement metrics --}}
@@ -36,13 +55,14 @@
                 @endif
             </div>
 
+            {{-- View Full Post Button --}}
             <a
                 href="{{ route('post.show', [
                     'username' => $post->user ? $post->user->username : 'unknown',
                     'post' => $post,
                 ]) }}">
                 <x-primary-button>
-                    Read more
+                    View Full Post
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
