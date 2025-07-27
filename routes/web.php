@@ -7,6 +7,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostClapController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AiChatController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,8 +15,7 @@ Route::get('/', function () {
 });
 
 
-Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
-Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai.chat.history');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,5 +44,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 });
+
+// Contact routes (public)
+Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
+Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai.chat.history');
 
 require __DIR__ . '/auth.php';
