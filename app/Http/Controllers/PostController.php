@@ -8,7 +8,9 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use PhpParser\Node\Expr\AssignOp\Pow;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -113,13 +115,42 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show($username, $post = null)
     {
-        $post->load(['user', 'category']);
-        $post->loadCount(['claps', 'comments']);
+        // Debug what we're receiving
+        \Illuminate\Support\Facades\Log::info('PostController::show received:', [
+            'username_type' => gettype($username),
+            'username_value' => $username,
+            'post_type' => gettype($post),
+            'post_value' => $post,
+            'request_url' => request()->url(),
+            'route_params' => request()->route()->parameters()
+        ]);
+        
+        // If we only got one parameter, it means the route matched incorrectly
+        if ($post === null) {
+            \Illuminate\Support\Facades\Log::error('PostController::show called with only username parameter - route mismatch!');
+            abort(404, 'Post not found - route mismatch');
+        }
+        
+        // If post is a string (slug), try to find the post by slug
+        if (is_string($post)) {
+            $postModel = Post::where('slug', $post)->firstOrFail();
+        } else {
+            $postModel = $post;
+        }
+        
+        // Verify the post belongs to the user
+        $user = User::where('username', $username)->firstOrFail();
+        if ($postModel->user_id !== $user->id) {
+            abort(404, 'Post not found for this user');
+        }
+        
+        $postModel->load(['user', 'category']);
+        $postModel->loadCount(['claps', 'comments']);
 
         return view('post.show', [
-            'post' => $post,
+            'post' => $postModel,
         ]);
     }
 

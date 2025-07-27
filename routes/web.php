@@ -24,6 +24,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/categories/{category}', [AdminController::class, 'deleteCategory'])->name('categories.delete');
 });
 
+// Categories management - admin only
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/categories', [PostController::class, 'categoriesPage'])->name('categories.page');
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -36,28 +41,27 @@ Route::middleware('auth')->group(function () {
     Route::put('/update/{id}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/delete/{id}', [PostController::class, 'destroy'])->name('post.delete');
 
-    Route::get('/@{username}/{post:slug}', [PostController::class, 'show'])->name('post.show');
-    Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('profile.show');
     Route::get('/@{username}/posts', [PublicProfileController::class, 'show'])->name('profile.posts');
     Route::get('/@{username}/following', [PublicProfileController::class, 'following'])->name('following');
     Route::get('/@{username}/followers', [PublicProfileController::class, 'followers'])->name('followers');
+    Route::get('/@{username}/{post:slug}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/@{username}', [PublicProfileController::class, 'show'])->name('profile.show');
 
     Route::get('/categories/{category}', [PostController::class, 'category'])->name('post.category');
-    Route::get('/categories', [PostController::class, 'categoriesPage'])->name('categories.page');
 
     Route::post('/@{username}/follow', [FollowController::class, 'store'])->name('follow');
     Route::delete('/@{username}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
     Route::post('/posts/{post}/clap', [PostClapController::class, 'clap'])->name('clap');
     Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
 });
 
-// Contact routes (public)
-Route::get('/contact', [ContactController::class, 'show'])->name('contact');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
-Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai.chat.history');
-
+// Public routes
 require __DIR__ . '/auth.php';
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

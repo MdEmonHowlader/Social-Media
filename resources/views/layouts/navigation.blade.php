@@ -17,10 +17,14 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('POSTS') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
-                        {{ __('CATEGORIES') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+                    @auth
+                        @if (auth()->user() && auth()->user()->isAdmin())
+                            <x-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
+                                {{ __('CATEGORIES') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
+                    <x-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
                         {{ __('CONTACT') }}
                     </x-nav-link>
                     @auth
@@ -121,10 +125,14 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
-                {{ __('Categories') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+            @auth
+                @if (auth()->user() && auth()->user()->isAdmin())
+                    <x-responsive-nav-link :href="route('categories.page')" :active="request()->routeIs('categories.page')">
+                        {{ __('Categories') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
+            <x-responsive-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
                 {{ __('Contact') }}
             </x-responsive-nav-link>
             @auth
