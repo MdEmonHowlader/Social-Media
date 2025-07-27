@@ -5,14 +5,16 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostClapController;
+use App\Http\Controllers\AiChatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
+// AI Chat routes (available to all users)
+Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
+Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai.chat.history');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

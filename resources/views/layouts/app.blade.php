@@ -32,5 +32,10 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <!-- AI Chat Widget (available on all authenticated pages) -->
+        @auth
+            @include('components.ai-chat')
+        @endauth
     </body>
 </html>

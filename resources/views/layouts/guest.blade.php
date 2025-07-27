@@ -26,5 +26,8 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <!-- AI Chat Widget (available on guest pages too) -->
+        @include('components.ai-chat')
     </body>
 </html>
