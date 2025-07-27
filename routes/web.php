@@ -13,7 +13,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// AI Chat routes (available to all users)
+
 Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
 Route::get('/ai-chat/history', [AiChatController::class, 'history'])->name('ai.chat.history');
 
@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/create', [PostController::class, 'create'])->name('post.create');
-    Route::get('/', [PostController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [PostController::class, 'index'])->name('dashboard');
 
     Route::post('/store', [PostController::class, 'store'])->name('post.store');
     Route::get('/edit/{id}', [PostController::class, 'edit'])->name('post.edit');
@@ -37,8 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/categories/{category}', [PostController::class, 'category'])->name('post.category');
 
-    Route::post('/users/{user}/follow', [FollowController::class, 'store'])->name('follow');
-    Route::delete('/users/{user}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
+    Route::post('/@{username}/follow', [FollowController::class, 'store'])->name('follow');
+    Route::delete('/@{username}/unfollow', [FollowController::class, 'destroy'])->name('unfollow');
     Route::post('/posts/{post}/clap', [PostClapController::class, 'clap'])->name('clap');
     Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
