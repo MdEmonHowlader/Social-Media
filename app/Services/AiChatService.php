@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AiChatService
 {
@@ -15,16 +16,57 @@ class AiChatService
 
         // Context-aware responses based on authentication status
         $isAuthenticated = Auth::check();
-        $userName = $isAuthenticated ? Auth::user()->name : 'there';
+        /** @var User|null $user */
+        $user = Auth::user();
+        $isAdmin = $isAuthenticated && $user instanceof User && $user->isAdmin();
+        $userName = $isAuthenticated && $user ? $user->name : 'there';
+
+        // Admin-specific queries (only for admins)
+        if ($isAdmin) {
+            // Admin dashboard queries
+            if ($this->matchesPattern($lowerMessage, ['dashboard', 'admin dashboard', 'stats', 'statistics', 'overview'])) {
+                return $this->getAdminDashboardResponse();
+            }
+
+            // User management queries
+            if ($this->matchesPattern($lowerMessage, ['users', 'user management', 'manage users', 'user list', 'total users'])) {
+                return $this->getUserManagementResponse();
+            }
+
+            // Category management queries
+            if ($this->matchesPattern($lowerMessage, ['manage categories', 'category management', 'add category', 'edit category', 'delete category'])) {
+                return $this->getCategoryManagementResponse();
+            }
+
+            // Contact management queries
+            if ($this->matchesPattern($lowerMessage, ['contacts', 'contact management', 'manage contacts', 'contact messages', 'contact replies'])) {
+                return $this->getContactManagementResponse();
+            }
+
+            // Image management queries
+            if ($this->matchesPattern($lowerMessage, ['images', 'image management', 'manage images', 'upload images', 'admin images'])) {
+                return $this->getImageManagementResponse();
+            }
+
+            // Notification management queries
+            if ($this->matchesPattern($lowerMessage, ['notifications', 'send notifications', 'notification management', 'broadcast', 'announcement'])) {
+                return $this->getNotificationManagementResponse();
+            }
+
+            // Admin system queries
+            if ($this->matchesPattern($lowerMessage, ['admin features', 'admin help', 'what can I do as admin', 'admin capabilities'])) {
+                return $this->getAdminHelpResponse();
+            }
+        }
 
         // Greeting responses
         if ($this->matchesPattern($lowerMessage, ['hello', 'hi', 'hey', 'good morning', 'good afternoon', 'good evening'])) {
-            return $this->getGreetingResponse($userName, $isAuthenticated);
+            return $this->getGreetingResponse($userName, $isAuthenticated, $isAdmin);
         }
 
         // Help responses
         if ($this->matchesPattern($lowerMessage, ['help', 'what can you do', 'assist', 'support'])) {
-            return $this->getHelpResponse($isAuthenticated);
+            return $this->getHelpResponse($isAuthenticated, $isAdmin);
         }
 
         // Post-related queries
@@ -49,7 +91,7 @@ class AiChatService
 
         // Categories and browsing
         if ($this->matchesPattern($lowerMessage, ['category', 'categories', 'browse', 'explore', 'discover', 'find'])) {
-            return $this->getCategoryHelpResponse();
+            return $this->getCategoryHelpResponse($isAdmin);
         }
 
         // Engagement features
@@ -57,9 +99,19 @@ class AiChatService
             return $this->getClapHelpResponse($isAuthenticated);
         }
 
+        // Comments queries
+        if ($this->matchesPattern($lowerMessage, ['comment', 'comments', 'commenting', 'reply', 'discussion'])) {
+            return $this->getCommentsHelpResponse($isAuthenticated);
+        }
+
+        // Notifications queries
+        if ($this->matchesPattern($lowerMessage, ['notification', 'notifications', 'alerts', 'updates'])) {
+            return $this->getNotificationsHelpResponse($isAuthenticated, $isAdmin);
+        }
+
         // Technical support
         if ($this->matchesPattern($lowerMessage, ['error', 'bug', 'problem', 'issue', 'not working', 'broken'])) {
-            return $this->getTechnicalSupportResponse();
+            return $this->getTechnicalSupportResponse($isAdmin);
         }
 
         // Goodbye responses
@@ -68,7 +120,7 @@ class AiChatService
         }
 
         // Default response
-        return $this->getDefaultResponse($userMessage, $isAuthenticated);
+        return $this->getDefaultResponse($userMessage, $isAuthenticated, $isAdmin);
     }
 
     /**
@@ -85,17 +137,128 @@ class AiChatService
     }
 
     /**
+     * Get admin dashboard response
+     */
+    private function getAdminDashboardResponse(): string
+    {
+        return "🎛️ **Admin Dashboard Overview**:\n\n" .
+            "• **Access Dashboard**: Go to `/admin/dashboard` or click Admin in navigation\n" .
+            "• **User Statistics**: View total users, admins, and new registrations\n" .
+            "• **Content Stats**: See total posts, categories, and engagement metrics\n" .
+            "• **Contact Messages**: Monitor new contact submissions\n" .
+            "• **Image Library**: Check total uploaded admin images\n" .
+            "• **System Health**: Overview of platform activity\n\n" .
+            "The dashboard provides real-time statistics and quick access to all admin features!";
+    }
+
+    /**
+     * Get user management response
+     */
+    private function getUserManagementResponse(): string
+    {
+        return "👥 **User Management**:\n\n" .
+            "• **View All Users**: Browse complete user list with roles\n" .
+            "• **Admin Privileges**: Grant or revoke admin access\n" .
+            "• **User Statistics**: See total users vs admins\n" .
+            "• **User Activity**: Monitor user engagement and posts\n" .
+            "• **Account Management**: Handle user account issues\n\n" .
+            "💡 **Pro Tip**: Use the artisan command `php artisan user:make-admin {email}` to promote users!";
+    }
+
+    /**
+     * Get category management response
+     */
+    private function getCategoryManagementResponse(): string
+    {
+        return "🗂️ **Category Management**:\n\n" .
+            "• **Create Categories**: Add new content categories\n" .
+            "• **Edit Categories**: Update existing category names\n" .
+            "• **Delete Categories**: Remove unused categories (only if no posts)\n" .
+            "• **View Statistics**: See post count per category\n" .
+            "• **Organize Content**: Help users find relevant content\n\n" .
+            "📍 **Access**: Admin → Categories or `/admin/categories`\n\n" .
+            "Categories help organize and filter content for better user experience!";
+    }
+
+    /**
+     * Get contact management response
+     */
+    private function getContactManagementResponse(): string
+    {
+        return "📧 **Contact Management**:\n\n" .
+            "• **View Messages**: See all contact form submissions\n" .
+            "• **Status Management**: Mark as new, read, replied, or closed\n" .
+            "• **Reply System**: Respond directly to user inquiries\n" .
+            "• **Search & Filter**: Find messages by status, name, or content\n" .
+            "• **Email Integration**: Automatic email replies to users\n\n" .
+            "📍 **Access**: Admin → Contacts or `/admin/contacts`\n\n" .
+            "Stay connected with your community and provide excellent support!";
+    }
+
+    /**
+     * Get image management response
+     */
+    private function getImageManagementResponse(): string
+    {
+        return "🖼️ **Image Management**:\n\n" .
+            "• **Upload Images**: Add images for admin use (up to 10MB)\n" .
+            "• **Organize by Category**: Sort images into categories\n" .
+            "• **Edit Metadata**: Update titles, descriptions, and alt text\n" .
+            "• **Search Images**: Find images by title or description\n" .
+            "• **Delete Images**: Remove unused images from storage\n\n" .
+            "📍 **Access**: Admin → Images or `/admin/images`\n\n" .
+            "Supported formats: JPEG, PNG, JPG, GIF, SVG";
+    }
+
+    /**
+     * Get notification management response
+     */
+    private function getNotificationManagementResponse(): string
+    {
+        return "🔔 **Notification Management**:\n\n" .
+            "• **Send Announcements**: Broadcast to all users\n" .
+            "• **System Notifications**: Important platform updates\n" .
+            "• **User Targeting**: Send to specific user groups\n" .
+            "• **Notification History**: Track sent notifications\n" .
+            "• **Delivery Stats**: Monitor notification engagement\n\n" .
+            "📍 **Access**: Admin → Notifications or `/admin/notifications/send`\n\n" .
+            "Keep your community informed with important updates and announcements!";
+    }
+
+    /**
+     * Get admin help response
+     */
+    private function getAdminHelpResponse(): string
+    {
+        return "🛡️ **Admin Capabilities**:\n\n" .
+            "**🎛️ Dashboard**: Real-time platform statistics\n" .
+            "**👥 Users**: Manage user accounts and permissions\n" .
+            "**🗂️ Categories**: Create and organize content categories\n" .
+            "**📧 Contacts**: Handle user inquiries and support\n" .
+            "**🖼️ Images**: Upload and manage admin image library\n" .
+            "**🔔 Notifications**: Send announcements to users\n" .
+            "**📊 Analytics**: Monitor platform health and usage\n\n" .
+            "As an admin, you have full access to all platform features and management tools!";
+    }
+
+    /**
      * Get greeting response
      */
-    private function getGreetingResponse(string $userName, bool $isAuthenticated): string
+    private function getGreetingResponse(string $userName, bool $isAuthenticated, bool $isAdmin = false): string
     {
-        $greetings = [
-            "Hello {$userName}! 👋 I'm your AI assistant. How can I help you today?",
-            "Hi {$userName}! Great to see you. What would you like to know about?",
-            "Hey {$userName}! I'm here to help with any questions about the platform."
-        ];
-
-        if (!$isAuthenticated) {
+        if ($isAdmin) {
+            $greetings = [
+                "Hello Admin {$userName}! 👑 I'm your AI assistant with full platform access. How can I help you manage the platform today?",
+                "Hi {$userName}! Great to see you in the admin panel. What administrative task can I assist you with?",
+                "Hey Admin {$userName}! I'm here to help with user management, content moderation, and all admin features."
+            ];
+        } elseif ($isAuthenticated) {
+            $greetings = [
+                "Hello {$userName}! 👋 I'm your AI assistant. How can I help you today?",
+                "Hi {$userName}! Great to see you. What would you like to know about?",
+                "Hey {$userName}! I'm here to help with any questions about the platform."
+            ];
+        } else {
             $greetings = [
                 "Hello! 👋 Welcome to our platform. I'm your AI assistant. How can I help you today?",
                 "Hi there! I'm here to help you navigate our platform. What would you like to know?",
@@ -109,14 +272,28 @@ class AiChatService
     /**
      * Get help response
      */
-    private function getHelpResponse(bool $isAuthenticated): string
+    private function getHelpResponse(bool $isAuthenticated, bool $isAdmin = false): string
     {
-        if ($isAuthenticated) {
+        if ($isAdmin) {
+            return "I'm here to help with everything! Here's what I can assist you with:\n\n" .
+                "🛡️ **Admin Features**:\n" .
+                "• Dashboard and statistics\n" .
+                "• User and category management\n" .
+                "• Contact and image management\n" .
+                "• Notification system\n\n" .
+                "👤 **Regular Features**:\n" .
+                "• Posts, profiles, and following\n" .
+                "• Comments and engagement\n" .
+                "• Categories and browsing\n\n" .
+                "Just ask me anything - I have access to all platform features!";
+        } elseif ($isAuthenticated) {
             return "I'm here to help! Here's what I can assist you with:\n\n" .
                 "📝 **Posts**: Create, edit, manage your posts\n" .
                 "👤 **Profile**: Update your profile and settings\n" .
                 "👥 **Following**: Connect with other users\n" .
                 "👏 **Engagement**: Clap for posts you enjoy\n" .
+                "💬 **Comments**: Participate in discussions\n" .
+                "🔔 **Notifications**: Stay updated with alerts\n" .
                 "🗂️ **Categories**: Browse posts by topic\n\n" .
                 "Just ask me anything specific!";
         } else {
@@ -223,14 +400,21 @@ class AiChatService
     /**
      * Get category help
      */
-    private function getCategoryHelpResponse(): string
+    private function getCategoryHelpResponse(bool $isAdmin = false): string
     {
-        return "🗂️ **Categories & Discovery**:\n\n" .
+        $response = "🗂️ **Categories & Discovery**:\n\n" .
             "• **Browse by Category**: Use category tabs to filter content\n" .
             "• **Discover New Content**: Explore different topics\n" .
             "• **Follow Interests**: Find authors in your areas of interest\n" .
-            "• **Organized Content**: Posts are organized by topic for easy browsing\n\n" .
-            "What type of content are you interested in?";
+            "• **Organized Content**: Posts are organized by topic for easy browsing\n";
+
+        if ($isAdmin) {
+            $response .= "• **Admin Access**: Manage categories at `/admin/categories`\n";
+        }
+
+        $response .= "\nWhat type of content are you interested in?";
+
+        return $response;
     }
 
     /**
@@ -256,17 +440,84 @@ class AiChatService
     }
 
     /**
+     * Get comments help response
+     */
+    private function getCommentsHelpResponse(bool $isAuthenticated): string
+    {
+        if ($isAuthenticated) {
+            return "💬 **Comments & Discussions**:\n\n" .
+                "• **Join Conversations**: Comment on any post to share your thoughts\n" .
+                "• **Engage with Authors**: Connect directly with content creators\n" .
+                "• **Build Community**: Foster meaningful discussions\n" .
+                "• **Get Notifications**: Receive alerts when others reply to your comments\n" .
+                "• **Manage Comments**: Edit or delete your own comments\n\n" .
+                "Comments help build a vibrant community around great content!";
+        } else {
+            return "💬 **Comments & Discussions**:\n\n" .
+                "Comments allow for rich discussions around posts! To participate, you'll need to:\n\n" .
+                "• Create an account first\n" .
+                "• Log in to your account\n" .
+                "• Browse posts and join conversations\n" .
+                "• Share your thoughts and insights\n\n" .
+                "Ready to join the discussion?";
+        }
+    }
+
+    /**
+     * Get notifications help response
+     */
+    private function getNotificationsHelpResponse(bool $isAuthenticated, bool $isAdmin = false): string
+    {
+        if ($isAdmin) {
+            return "🔔 **Notifications (Admin)**:\n\n" .
+                "**📨 Send Notifications**: Broadcast announcements to all users\n" .
+                "**📊 Manage System**: Control platform-wide notifications\n" .
+                "**📋 Monitor Activity**: Track notification delivery and engagement\n\n" .
+                "**📱 Personal Notifications**: Also receive all regular user notifications\n" .
+                "• New followers and comments\n" .
+                "• Post engagement alerts\n" .
+                "• Platform activity updates\n\n" .
+                "Access admin notifications at `/admin/notifications/send`";
+        } elseif ($isAuthenticated) {
+            return "🔔 **Notifications & Updates**:\n\n" .
+                "• **Stay Informed**: Get notified about new followers\n" .
+                "• **Engagement Alerts**: Know when someone claps for your posts\n" .
+                "• **Comment Notifications**: See when others comment on your content\n" .
+                "• **System Updates**: Receive important platform announcements\n" .
+                "• **Manage Preferences**: Control what notifications you receive\n\n" .
+                "Check your notifications in the top navigation bar!";
+        } else {
+            return "🔔 **Notifications & Updates**:\n\n" .
+                "Once you create an account, you'll receive notifications for:\n\n" .
+                "• New followers and engagement\n" .
+                "• Comments on your posts\n" .
+                "• Important platform updates\n" .
+                "• Community announcements\n\n" .
+                "Stay connected with your audience and the platform!";
+        }
+    }
+
+    /**
      * Get technical support response
      */
-    private function getTechnicalSupportResponse(): string
+    private function getTechnicalSupportResponse(bool $isAdmin = false): string
     {
-        return "🔧 **Technical Support**:\n\n" .
+        $response = "🔧 **Technical Support**:\n\n" .
             "I'm sorry you're experiencing issues! Here are some quick fixes:\n\n" .
             "• **Refresh the page** - This solves many temporary issues\n" .
             "• **Clear browser cache** - Sometimes cached data causes problems\n" .
             "• **Check your internet connection** - Ensure you're connected\n" .
-            "• **Try a different browser** - This can help identify browser-specific issues\n\n" .
-            "If the problem persists, please describe what specifically isn't working and I'll try to help further!";
+            "• **Try a different browser** - This can help identify browser-specific issues\n";
+
+        if ($isAdmin) {
+            $response .= "• **Check server logs** - Monitor Laravel logs for errors\n" .
+                "• **Database status** - Verify database connectivity\n" .
+                "• **Admin tools** - Use dashboard for system diagnostics\n";
+        }
+
+        $response .= "\nIf the problem persists, please describe what specifically isn't working and I'll try to help further!";
+
+        return $response;
     }
 
     /**
@@ -286,18 +537,23 @@ class AiChatService
     /**
      * Get default response
      */
-    private function getDefaultResponse(string $userMessage, bool $isAuthenticated): string
+    private function getDefaultResponse(string $userMessage, bool $isAuthenticated, bool $isAdmin = false): string
     {
-        $suggestions = $isAuthenticated ?
-            "posts, profile management, following users, or clapping for content" :
-            "browsing posts, creating an account, or learning about our platform";
+        if ($isAdmin) {
+            $suggestions = "admin dashboard, user management, categories, contacts, images, notifications, or any regular platform features";
+        } elseif ($isAuthenticated) {
+            $suggestions = "posts, profile management, following users, comments, notifications, or clapping for content";
+        } else {
+            $suggestions = "browsing posts, creating an account, or learning about our platform";
+        }
 
         return "I understand you're asking about: \"{$userMessage}\"\n\n" .
             "I'm still learning, but I'm here to help with {$suggestions}. " .
             "Could you be more specific about what you'd like to know? For example:\n\n" .
             "• \"How do I create a post?\"\n" .
             "• \"How do I follow someone?\"\n" .
-            "• \"How do I update my profile?\"\n\n" .
-            "Just ask me anything! 😊";
+            "• \"How do I update my profile?\"\n" .
+            ($isAdmin ? "• \"How do I manage users?\"\n• \"How do I send notifications?\"\n" : "") .
+            "\nJust ask me anything! 😊";
     }
 }
