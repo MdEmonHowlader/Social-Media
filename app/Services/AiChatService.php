@@ -309,23 +309,42 @@ class AiChatService
     /**
      * Get post-related help
      */
-    private function getPostHelpResponse(bool $isAuthenticated): string
+    private function getPostHelpResponse(bool $isAuthenticated, string $language = 'en'): string
     {
-        if ($isAuthenticated) {
-            return "📝 **Post Management Help**:\n\n" .
-                "• **Create Post**: Click the 'Create Post' button in the navigation\n" .
-                "• **Add Content**: Write your title, content, and select a category\n" .
-                "• **Edit Posts**: Visit your profile to edit existing posts\n" .
-                "• **Delete Posts**: Use the edit menu to remove posts\n" .
-                "• **Categories**: Choose from available categories to organize your content\n\n" .
-                "Need help with a specific post feature?";
+        if ($language === 'bn') {
+            if ($isAuthenticated) {
+                return "📝 **পোস্ট পরিচালনা সাহায্য**:\n\n" .
+                    "• **পোস্ট তৈরি**: নেভিগেশনে 'পোস্ট তৈরি' বোতামে ক্লিক করুন\n" .
+                    "• **কন্টেন্ট যোগ**: আপনার শিরোনাম, বিষয়বস্তু লিখুন এবং একটি ক্যাটেগরি নির্বাচন করুন\n" .
+                    "• **পোস্ট সম্পাদনা**: বিদ্যমান পোস্ট সম্পাদনা করতে আপনার প্রোফাইল দেখুন\n" .
+                    "• **পোস্ট মুছুন**: পোস্ট সরাতে সম্পাদনা মেনু ব্যবহার করুন\n" .
+                    "• **ক্যাটেগরি**: আপনার কন্টেন্ট সংগঠিত করতে উপলব্ধ ক্যাটেগরি থেকে নির্বাচন করুন\n\n" .
+                    "কোন নির্দিষ্ট পোস্ট বৈশিষ্ট্যে সাহায্য প্রয়োজন?";
+            } else {
+                return "পোস্ট তৈরি এবং পরিচালনা করতে, আপনাকে প্রথমে একটি অ্যাকাউন্টের জন্য সাইন আপ করতে হবে। নিবন্ধনের পর, আপনি পারবেন:\n\n" .
+                    "• পোস্ট লিখতে এবং প্রকাশ করতে\n" .
+                    "• ক্যাটেগরি অনুযায়ী কন্টেন্ট সংগঠিত করতে\n" .
+                    "• আপনার কন্টেন্ট সম্পাদনা এবং পরিচালনা করতে\n" .
+                    "• আপনার দর্শক তৈরি করতে\n\n" .
+                    "নিবন্ধন শুরু করতে সাহায্য চান?";
+            }
         } else {
-            return "To create and manage posts, you'll need to sign up for an account first. Once registered, you can:\n\n" .
-                "• Write and publish posts\n" .
-                "• Organize content by categories\n" .
-                "• Edit and manage your content\n" .
-                "• Build your audience\n\n" .
-                "Would you like help getting started with registration?";
+            if ($isAuthenticated) {
+                return "📝 **Post Management Help**:\n\n" .
+                    "• **Create Post**: Click the 'Create Post' button in the navigation\n" .
+                    "• **Add Content**: Write your title, content, and select a category\n" .
+                    "• **Edit Posts**: Visit your profile to edit existing posts\n" .
+                    "• **Delete Posts**: Use the edit menu to remove posts\n" .
+                    "• **Categories**: Choose from available categories to organize your content\n\n" .
+                    "Need help with a specific post feature?";
+            } else {
+                return "To create and manage posts, you'll need to sign up for an account first. Once registered, you can:\n\n" .
+                    "• Write and publish posts\n" .
+                    "• Organize content by categories\n" .
+                    "• Edit and manage your content\n" .
+                    "• Build your audience\n\n" .
+                    "Would you like help getting started with registration?";
+            }
         }
     }
 
@@ -523,13 +542,21 @@ class AiChatService
     /**
      * Get goodbye response
      */
-    private function getGoodbyeResponse(string $userName): string
+    private function getGoodbyeResponse(string $userName, string $language = 'en'): string
     {
-        $goodbyes = [
-            "Goodbye {$userName}! Thanks for chatting. Feel free to come back anytime! 👋",
-            "See you later {$userName}! I'm always here when you need help. 😊",
-            "Thanks for the chat {$userName}! Have a great day and happy posting! ✨"
-        ];
+        if ($language === 'bn') {
+            $goodbyes = [
+                "বিদায় {$userName}! চ্যাট করার জন্য ধন্যবাদ। যেকোনো সময় ফিরে আসতে পারেন! 👋",
+                "পরে দেখা হবে {$userName}! আপনার সাহায্যের প্রয়োজন হলে আমি সবসময় এখানে আছি। 😊",
+                "চ্যাট করার জন্য ধন্যবাদ {$userName}! ভাল দিন কাটুক এবং আনন্দে পোস্ট করুন! ✨"
+            ];
+        } else {
+            $goodbyes = [
+                "Goodbye {$userName}! Thanks for chatting. Feel free to come back anytime! 👋",
+                "See you later {$userName}! I'm always here when you need help. 😊",
+                "Thanks for the chat {$userName}! Have a great day and happy posting! ✨"
+            ];
+        }
 
         return $goodbyes[array_rand($goodbyes)];
     }
@@ -537,23 +564,42 @@ class AiChatService
     /**
      * Get default response
      */
-    private function getDefaultResponse(string $userMessage, bool $isAuthenticated, bool $isAdmin = false): string
+    private function getDefaultResponse(string $userMessage, bool $isAuthenticated, bool $isAdmin = false, string $language = 'en'): string
     {
-        if ($isAdmin) {
-            $suggestions = "admin dashboard, user management, categories, contacts, images, notifications, or any regular platform features";
-        } elseif ($isAuthenticated) {
-            $suggestions = "posts, profile management, following users, comments, notifications, or clapping for content";
-        } else {
-            $suggestions = "browsing posts, creating an account, or learning about our platform";
-        }
+        if ($language === 'bn') {
+            if ($isAdmin) {
+                $suggestions = "অ্যাডমিন ড্যাশবোর্ড, ব্যবহারকারী পরিচালনা, ক্যাটেগরি, যোগাযোগ, ইমেজ, বিজ্ঞপ্তি, বা যেকোনো নিয়মিত প্ল্যাটফর্ম বৈশিষ্ট্য";
+            } elseif ($isAuthenticated) {
+                $suggestions = "পোস্ট, প্রোফাইল পরিচালনা, ব্যবহারকারীদের অনুসরণ, মন্তব্য, বিজ্ঞপ্তি, বা কন্টেন্টে তালি";
+            } else {
+                $suggestions = "পোস্ট ব্রাউজিং, অ্যাকাউন্ট তৈরি, বা আমাদের প্ল্যাটফর্ম সম্পর্কে জানা";
+            }
 
-        return "I understand you're asking about: \"{$userMessage}\"\n\n" .
-            "I'm still learning, but I'm here to help with {$suggestions}. " .
-            "Could you be more specific about what you'd like to know? For example:\n\n" .
-            "• \"How do I create a post?\"\n" .
-            "• \"How do I follow someone?\"\n" .
-            "• \"How do I update my profile?\"\n" .
-            ($isAdmin ? "• \"How do I manage users?\"\n• \"How do I send notifications?\"\n" : "") .
-            "\nJust ask me anything! 😊";
+            return "আমি বুঝতে পারছি আপনি জিজ্ঞাসা করছেন: \"{$userMessage}\"\n\n" .
+                "আমি এখনো শিখছি, কিন্তু আমি {$suggestions} বিষয়ে সাহায্য করতে এখানে আছি। " .
+                "আপনি কী জানতে চান সে বিষয়ে আরো নির্দিষ্ট হতে পারেন? উদাহরণস্বরূপ:\n\n" .
+                "• \"আমি কীভাবে একটি পোস্ট তৈরি করব?\"\n" .
+                "• \"আমি কীভাবে কাউকে অনুসরণ করব?\"\n" .
+                "• \"আমি কীভাবে আমার প্রোফাইল আপডেট করব?\"\n" .
+                ($isAdmin ? "• \"আমি কীভাবে ব্যবহারকারীদের পরিচালনা করব?\"\n• \"আমি কীভাবে বিজ্ঞপ্তি পাঠাব?\"\n" : "") .
+                "\nযেকোনো কিছু জিজ্ঞাসা করুন! 😊";
+        } else {
+            if ($isAdmin) {
+                $suggestions = "admin dashboard, user management, categories, contacts, images, notifications, or any regular platform features";
+            } elseif ($isAuthenticated) {
+                $suggestions = "posts, profile management, following users, comments, notifications, or clapping for content";
+            } else {
+                $suggestions = "browsing posts, creating an account, or learning about our platform";
+            }
+
+            return "I understand you're asking about: \"{$userMessage}\"\n\n" .
+                "I'm still learning, but I'm here to help with {$suggestions}. " .
+                "Could you be more specific about what you'd like to know? For example:\n\n" .
+                "• \"How do I create a post?\"\n" .
+                "• \"How do I follow someone?\"\n" .
+                "• \"How do I update my profile?\"\n" .
+                ($isAdmin ? "• \"How do I manage users?\"\n• \"How do I send notifications?\"\n" : "") .
+                "\nJust ask me anything! 😊";
+        }
     }
 }

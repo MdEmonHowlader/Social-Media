@@ -3,6 +3,73 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Language Toggle Styling */
+#language-toggle {
+    transition: all 0.2s ease;
+}
+
+#language-toggle:hover {
+    transform: scale(1.05);
+}
+
+#language-toggle:active {
+    transform: scale(0.95);
+}
+
+#current-language {
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Language Status Bar */
+#language-status {
+    transition: all 0.3s ease;
+}
+
+#language-indicator {
+    font-weight: 500;
+}
+
+#voice-language-status {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+/* Bengali Font Support */
+.bengali-text {
+    font-family: 'SolaimanLipi', 'Kalpurush', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Recording Language Indicator */
+#recording-language {
+    background: rgba(220, 38, 38, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Language Toggle Animation */
+@keyframes languageSwitch {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: translateY(-2px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.language-switching {
+    animation: languageSwitch 0.3s ease-in-out;
+}
+
 /* Chat window animations */
 #chat-window {
     animation: slideUp 0.3s ease-out;
@@ -59,6 +126,166 @@
 #chat-toggle:hover::before {
     width: 100px;
     height: 100px;
+}
+
+/* Voice Input Button Styles */
+#voice-input {
+    position: relative;
+    overflow: hidden;
+}
+
+#voice-input:hover {
+    transform: scale(1.05);
+}
+
+#voice-input.recording {
+    animation: recordingPulse 1.5s infinite;
+}
+
+@keyframes recordingPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+}
+
+/* Voice Recording Indicator Styles */
+#voice-recording {
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.recording-pulse {
+    animation: pulseRed 2s infinite;
+}
+
+@keyframes pulseRed {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Voice Error Styling */
+#voice-error {
+    animation: errorSlideIn 0.3s ease-out;
+}
+
+@keyframes errorSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Speech Control Button Styling */
+#toggle-speech {
+    transition: all 0.2s ease;
+}
+
+#toggle-speech:hover {
+    transform: scale(1.1);
+}
+
+#toggle-speech:active {
+    transform: scale(0.95);
+}
+
+/* Speak Button Styling for Individual Messages */
+.speak-button {
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.speak-button:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: scale(1.1);
+}
+
+.speak-button:active {
+    transform: scale(0.9);
+}
+
+/* Voice Activity Indicator */
+.voice-activity {
+    position: relative;
+}
+
+.voice-activity::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    border: 2px solid white;
+    animation: voiceActivityPulse 2s infinite;
+}
+
+@keyframes voiceActivityPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Voice Message Status Indicators */
+.voice-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.voice-status-listening {
+    color: #dc2626;
+}
+
+.voice-status-processing {
+    color: #f59e0b;
+}
+
+.voice-status-ready {
+    color: #10b981;
 }
 
 /* Chat messages custom scrollbar */
@@ -126,6 +353,51 @@
     }
 }
 
+/* Voice Wave Animation for Speaking */
+.speaking-wave {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+}
+
+.wave-bar {
+    width: 3px;
+    height: 12px;
+    background: #3b82f6;
+    border-radius: 2px;
+    animation: waveAnimation 1.2s infinite ease-in-out;
+}
+
+.wave-bar:nth-child(1) {
+    animation-delay: -0.9s;
+}
+
+.wave-bar:nth-child(2) {
+    animation-delay: -0.8s;
+}
+
+.wave-bar:nth-child(3) {
+    animation-delay: -0.7s;
+}
+
+.wave-bar:nth-child(4) {
+    animation-delay: -0.6s;
+}
+
+@keyframes waveAnimation {
+
+    0%,
+    40%,
+    100% {
+        transform: scaleY(0.4);
+    }
+
+    20% {
+        transform: scaleY(1);
+    }
+}
+
 /* Mobile responsiveness */
 @media (max-width: 640px) {
     #ai-chat-widget {
@@ -142,6 +414,46 @@
     #chat-messages {
         height: 300px;
     }
+
+    /* Adjust voice button size on mobile */
+    #voice-input {
+        padding: 8px;
+    }
+
+    #voice-input svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Make voice controls more touch-friendly */
+    .speak-button {
+        padding: 8px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+
+    #toggle-speech,
+    #language-toggle {
+        padding: 8px;
+    }
+
+    /* Language toggle adjustments for mobile */
+    #current-language {
+        font-size: 10px;
+        min-width: 20px;
+    }
+
+    #language-status {
+        padding: 8px 12px;
+    }
+
+    #language-indicator {
+        font-size: 11px;
+    }
+
+    #voice-language-status {
+        font-size: 9px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -155,12 +467,28 @@
     #chat-messages {
         height: 250px;
     }
+
+    /* Stack voice controls vertically on very small screens */
+    .chat-header-controls {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    /* Bengali text optimization for small screens */
+    .bengali-text {
+        font-size: 13px;
+        line-height: 1.5;
+    }
 }
 
 /* Focus states for accessibility */
 #chat-toggle:focus,
 #chat-input:focus,
 #send-button:focus,
+#voice-input:focus,
+#toggle-speech:focus,
+#language-toggle:focus,
+.speak-button:focus,
 #minimize-chat:focus {
     outline: 2px solid #3B82F6;
     outline-offset: 2px;
@@ -179,6 +507,19 @@
     .text-gray-500 {
         color: #000 !important;
     }
+
+    #voice-input,
+    #language-toggle {
+        border: 2px solid #000;
+    }
+
+    .speak-button {
+        border: 1px solid #000;
+    }
+
+    #language-status {
+        border-bottom: 2px solid #000;
+    }
 }
 
 /* Reduced motion support */
@@ -187,16 +528,28 @@
     #chat-window,
     .chat-message,
     #chat-toggle::before,
-    .typing-dot {
+    .typing-dot,
+    #voice-input,
+    .speak-button,
+    #voice-recording,
+    .recording-pulse,
+    .voice-activity::after,
+    .speaking-wave,
+    .wave-bar,
+    .language-switching {
         animation: none !important;
     }
 
-    #chat-toggle {
+    #chat-toggle,
+    #voice-input,
+    .speak-button,
+    #toggle-speech,
+    #language-toggle {
         transition: none !important;
     }
 }
 
-/* Dark mode support (if you implement it) */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
     #chat-window {
         background-color: #1f2937;
@@ -225,4 +578,64 @@
     #chat-input::placeholder {
         color: #9ca3af;
     }
+
+    /* Dark mode voice controls */
+    #voice-error {
+        background-color: #7f1d1d;
+        border-color: #dc2626;
+        color: #fca5a5;
+    }
+
+    #voice-recording {
+        background-color: #7f1d1d;
+        border-color: #dc2626;
+    }
+
+    .speak-button:hover {
+        background-color: rgba(59, 130, 246, 0.2);
+    }
+
+    /* Dark mode language support */
+    #language-status {
+        background-color: #1e3a8a;
+        border-color: #1e40af;
+    }
+
+    #language-indicator {
+        color: #dbeafe;
+    }
+
+    #voice-language-status {
+        color: #93c5fd;
+    }
+}
+
+/* Print styles - hide voice controls when printing */
+@media print {
+
+    #voice-input,
+    #toggle-speech,
+    #language-toggle,
+    .speak-button,
+    #voice-recording,
+    #voice-error,
+    #language-status {
+        display: none !important;
+    }
+}
+
+/* RTL Support for Bengali (if needed) */
+.rtl-support {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Bengali Number Support */
+.bengali-numbers {
+    font-feature-settings: "locl" 1;
+}
+
+/* Language Transition Effects */
+.content-switching {
+    transition: all 0.2s ease-in-out;
 }
