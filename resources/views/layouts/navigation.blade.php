@@ -44,6 +44,18 @@
                     </x-primary-button>
                 </a>
 
+                <!-- Notifications -->
+                @auth
+                    @php
+                        $notificationService = app(\App\Services\NotificationService::class);
+                        $notifications = $notificationService->getUnreadNotifications(Auth::user(), 10);
+                        $unreadCount = $notificationService->getUnreadCount(Auth::user());
+                    @endphp
+                    <div class="hidden sm:flex sm:items-center sm:ms-3">
+                        <x-notification-dropdown :notifications="$notifications" :unreadCount="$unreadCount" />
+                    </div>
+                @endauth
+
                 <!-- Settings Dropdown -->
                 @auth
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
@@ -67,6 +79,16 @@
                             <x-slot name="content">
                                 <x-dropdown-link :href="route('profile.edit')">
                                     {{ __('Profile') }}
+                                </x-dropdown-link>
+
+                                <x-dropdown-link :href="route('notifications.index')">
+                                    {{ __('Notifications') }}
+                                    @if ($unreadCount > 0)
+                                        <span
+                                            class="ml-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                                            {{ $unreadCount }}
+                                        </span>
+                                    @endif
                                 </x-dropdown-link>
 
                                 @if (Auth::user()->isAdmin())

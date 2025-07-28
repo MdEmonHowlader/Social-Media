@@ -34,5 +34,13 @@ class DatabaseSeeder extends Seeder
       Category::create(['name' => $category]);
     }
     // Post::factory(100)->create();
+
+    // Call additional seeders
+    $this->call([
+      CategorySeeder::class,
+      PostSeeder::class,
+      ContactSeeder::class,
+      NotificationSeeder::class,
+    ]);
   }
 }

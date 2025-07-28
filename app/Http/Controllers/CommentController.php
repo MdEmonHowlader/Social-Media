@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Notifications\NewCommentNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,6 +48,12 @@ class CommentController extends Controller
         ]);
 
         $comment->load('user');
+
+        // Send notification to post author (but not if they commented on their own post)
+        if ($post->user_id !== Auth::id()) {
+            $post->load('user');
+            $post->user->notify(new NewCommentNotification($comment, $post, Auth::user()));
+        }
 
         return response()->json([
             'success' => true,

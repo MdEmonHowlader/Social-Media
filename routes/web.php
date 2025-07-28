@@ -72,6 +72,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
     Route::post('/ai-chat', [AiChatController::class, 'chat'])->name('ai.chat');
+
+    // Notification routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
+        Route::get('/unread', [\App\Http\Controllers\NotificationController::class, 'unread'])->name('unread');
+        Route::get('/count', [\App\Http\Controllers\NotificationController::class, 'count'])->name('count');
+        Route::patch('/{notification}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/', [\App\Http\Controllers\NotificationController::class, 'destroyAll'])->name('destroy-all');
+        Route::post('/send-to-all', [\App\Http\Controllers\NotificationController::class, 'sendToAll'])->name('send-to-all');
+        Route::get('/send', function () {
+            return view('admin.notifications.send');
+        })->name('send-form');
+        Route::get('/stats', [\App\Http\Controllers\NotificationController::class, 'stats'])->name('stats');
+    });
 });
 
 // Public routes

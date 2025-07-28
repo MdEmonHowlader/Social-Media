@@ -42,6 +42,59 @@
                 </div>
             @endif
 
+            <!-- Quick Actions -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="{{ route('notifications.send-form') }}"
+                        class="flex items-center p-4 bg-blue-50 hover:bg-blue-100 rounded-xl border border-blue-200 transition-colors duration-200 group">
+                        <div class="flex-shrink-0">
+                            <svg class="w-8 h-8 text-blue-600 group-hover:text-blue-700" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-blue-900">Send Notification</p>
+                            <p class="text-sm text-blue-700">Broadcast to all users</p>
+                        </div>
+                    </a>
+
+                    <a href="{{ route('notifications.index') }}"
+                        class="flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-xl border border-green-200 transition-colors duration-200 group">
+                        <div class="flex-shrink-0">
+                            <svg class="w-8 h-8 text-green-600 group-hover:text-green-700" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path
+                                    d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z">
+                                </path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-900">View Notifications</p>
+                            <p class="text-sm text-green-700">Manage all notifications</p>
+                        </div>
+                    </a>
+
+                    <a href="javascript:void(0);" onclick="loadNotificationStats()"
+                        class="flex items-center p-4 bg-purple-50 hover:bg-purple-100 rounded-xl border border-purple-200 transition-colors duration-200 group">
+                        <div class="flex-shrink-0">
+                            <svg class="w-8 h-8 text-purple-600 group-hover:text-purple-700" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
+                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-purple-900">Notification Stats</p>
+                            <p class="text-sm text-purple-700">View analytics</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
             <!-- Statistics Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
                 <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-100">
