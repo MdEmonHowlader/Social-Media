@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
+    {{-- <x-slot name="header">
         <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6 shadow-lg">
             <div class="flex items-center justify-between">
                 <div>
@@ -18,7 +18,7 @@
                 </a>
             </div>
         </div>
-    </x-slot>
+    </x-slot> --}}
 
     <div class="py-12 bg-gradient-to-br from-gray-50 to-purple-50 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

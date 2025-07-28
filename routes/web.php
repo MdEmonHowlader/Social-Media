@@ -9,6 +9,9 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NotificationController;
+
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -75,18 +78,18 @@ Route::middleware('auth')->group(function () {
 
     // Notification routes
     Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\NotificationController::class, 'index'])->name('index');
-        Route::get('/unread', [\App\Http\Controllers\NotificationController::class, 'unread'])->name('unread');
-        Route::get('/count', [\App\Http\Controllers\NotificationController::class, 'count'])->name('count');
-        Route::patch('/{notification}/mark-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('mark-read');
-        Route::post('/mark-all-read', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
-        Route::delete('/{notification}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('destroy');
-        Route::delete('/', [\App\Http\Controllers\NotificationController::class, 'destroyAll'])->name('destroy-all');
-        Route::post('/send-to-all', [\App\Http\Controllers\NotificationController::class, 'sendToAll'])->name('send-to-all');
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/unread', [NotificationController::class, 'unread'])->name('unread');
+        Route::get('/count', [NotificationController::class, 'count'])->name('count');
+        Route::patch('/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/', [NotificationController::class, 'destroyAll'])->name('destroy-all');
+        Route::post('/send-to-all', [NotificationController::class, 'sendToAll'])->name('send-to-all');
         Route::get('/send', function () {
             return view('admin.notifications.send');
         })->name('send-form');
-        Route::get('/stats', [\App\Http\Controllers\NotificationController::class, 'stats'])->name('stats');
+        Route::get('/stats', [NotificationController::class, 'stats'])->name('stats');
     });
 });
 

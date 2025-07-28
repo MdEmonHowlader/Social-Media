@@ -24,9 +24,18 @@
                             </x-nav-link>
                         @endif
                     @endauth
-                    <x-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
-                        {{ __('CONTACT') }}
-                    </x-nav-link>
+                    @auth
+                        @if (!auth()->user()->isAdmin())
+                            <x-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
+                                {{ __('CONTACT') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
+                    @guest
+                        <x-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
+                            {{ __('CONTACT') }}
+                        </x-nav-link>
+                    @endguest
                     @auth
                         @if (Auth::user()->isAdmin())
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
@@ -154,9 +163,18 @@
                     </x-responsive-nav-link>
                 @endif
             @endauth
-            <x-responsive-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
-                {{ __('Contact') }}
-            </x-responsive-nav-link>
+            @auth
+                @if (!auth()->user()->isAdmin())
+                    <x-responsive-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
+                        {{ __('Contact') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
+            @guest
+                <x-responsive-nav-link :href="route('contact.show')" :active="request()->routeIs('contact.show')">
+                    {{ __('Contact') }}
+                </x-responsive-nav-link>
+            @endguest
             @auth
                 @if (Auth::user()->isAdmin())
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
