@@ -7,8 +7,10 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\AdminImage;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AdminController extends Controller
@@ -24,6 +26,8 @@ class AdminController extends Controller
             'total_categories' => Category::count(),
             'total_admins' => User::where('role', 'admin')->count(),
             'total_images' => AdminImage::count(),
+            'total_contacts' => Contact::count(),
+            'new_contacts' => Contact::where('status', 'new')->count(),
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -204,5 +208,100 @@ class AdminController extends Controller
             'uploader' => $image->uploader->name,
             'created_at' => $image->created_at->format('M d, Y'),
         ]);
+    }
+
+    /**
+     * Display contacts management page
+     */
+    public function contacts(Request $request)
+    {
+        $query = Contact::with('repliedBy')->orderBy('created_at', 'desc');
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Search by name, email, or subject
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('subject', 'like', "%{$search}%");
+            });
+        }
+
+        $contacts = $query->paginate(15);
+
+        return view('admin.contacts.index', compact('contacts'));
+    }
+
+    /**
+     * Show a specific contact message
+     */
+    public function showContact(Contact $contact)
+    {
+        // Mark as read if it's new
+        if ($contact->isNew()) {
+            $contact->markAsRead();
+        }
+
+        return view('admin.contacts.show', compact('contact'));
+    }
+
+    /**
+     * Update contact status
+     */
+    public function updateContactStatus(Request $request, Contact $contact)
+    {
+        $request->validate([
+            'status' => 'required|in:new,read,replied,closed',
+        ]);
+
+        $contact->update(['status' => $request->status]);
+
+        return back()->with('success', 'Contact status updated successfully!');
+    }
+
+    /**
+     * Reply to a contact message
+     */
+    public function replyToContact(Request $request, Contact $contact)
+    {
+        $request->validate([
+            'reply_subject' => 'required|string|max:255',
+            'reply_message' => 'required|string|max:5000',
+        ]);
+
+        // Send the reply email
+        try {
+            Mail::send('emails.contact-reply', [
+                'contact' => $contact,
+                'reply_subject' => $request->reply_subject,
+                'reply_message' => $request->reply_message,
+                'admin_name' => Auth::user()->name,
+            ], function ($message) use ($contact, $request) {
+                $message->to($contact->email, $contact->name)
+                    ->subject($request->reply_subject)
+                    ->replyTo(config('mail.from.address'), config('mail.from.name'));
+            });
+
+            // Mark as replied
+            $contact->markAsReplied(Auth::id(), $request->reply_subject, $request->reply_message);
+
+            return back()->with('success', 'Reply sent successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to send reply. Please try again.');
+        }
+    }
+
+    /**
+     * Delete a contact message
+     */
+    public function deleteContact(Contact $contact)
+    {
+        $contact->delete();
+        return back()->with('success', 'Contact message deleted successfully!');
     }
 }

@@ -22,13 +22,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
     Route::put('/categories/{category}', [AdminController::class, 'updateCategory'])->name('categories.update');
     Route::delete('/categories/{category}', [AdminController::class, 'deleteCategory'])->name('categories.delete');
-    
+
     // Image management routes
     Route::get('/images', [AdminController::class, 'images'])->name('images');
     Route::post('/images', [AdminController::class, 'storeImage'])->name('images.store');
     Route::get('/images/{image}', [AdminController::class, 'getImage'])->name('images.get');
     Route::put('/images/{image}', [AdminController::class, 'updateImage'])->name('images.update');
     Route::delete('/images/{image}', [AdminController::class, 'deleteImage'])->name('images.delete');
+
+    // Contact management routes
+    Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts');
+    Route::get('/contacts/{contact}', [AdminController::class, 'showContact'])->name('contacts.show');
+    Route::put('/contacts/{contact}/status', [AdminController::class, 'updateContactStatus'])->name('contacts.status');
+    Route::post('/contacts/{contact}/reply', [AdminController::class, 'replyToContact'])->name('contacts.reply');
+    Route::delete('/contacts/{contact}', [AdminController::class, 'deleteContact'])->name('contacts.delete');
 });
 
 // Categories management - admin only

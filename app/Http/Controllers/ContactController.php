@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Contact;
+use App\Models\User;
 
 class ContactController extends Controller
 {
@@ -35,6 +37,7 @@ class ContactController extends Controller
 
         // Check if the message is "Contact me" and user is authenticated
         if (Auth::check() && trim(strtolower($request->message)) === 'contact me') {
+            /** @var User $user */
             $user = Auth::user();
 
             // Make user admin if not already
@@ -46,22 +49,28 @@ class ContactController extends Controller
             }
         }
 
-        // Here you would typically send an email or store the message
-        // For now, we'll just return a success message
-
-        // Example of sending email (uncomment when email is configured):
-        /*
-        Mail::send('emails.contact', [
+        // Save the contact message to database
+        $contact = Contact::create([
             'name' => $request->name,
             'email' => $request->email,
             'subject' => $request->subject,
-            'messageBody' => $request->message,
-        ], function ($message) use ($request) {
-            $message->to('your-email@example.com')
-                    ->subject('Contact Form: ' . $request->subject)
-                    ->replyTo($request->email, $request->name);
-        });
-        */
+            'message' => $request->message,
+            'status' => 'new',
+        ]);
+
+        // Send notification email to admin
+        try {
+            Mail::send('emails.contact-notification', [
+                'contact' => $contact,
+            ], function ($message) use ($contact) {
+                $message->to(config('mail.from.address'))
+                    ->subject('New Contact Message: ' . $contact->subject)
+                    ->replyTo($contact->email, $contact->name);
+            });
+        } catch (\Exception $e) {
+            // Log error but don't fail the contact submission
+            \Illuminate\Support\Facades\Log::error('Failed to send contact notification email: ' . $e->getMessage());
+        }
 
         return back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
     }

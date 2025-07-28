@@ -43,7 +43,7 @@
             @endif
 
             <!-- Statistics Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
                 <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-100">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -143,6 +143,30 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-100">
+                    <div class="p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <dt class="text-sm font-medium text-gray-500 truncate">Contacts</dt>
+                                <dd class="text-2xl font-bold text-gray-900">{{ $stats['total_contacts'] }}</dd>
+                                @if ($stats['new_contacts'] > 0)
+                                    <div class="text-xs text-indigo-600 font-medium">{{ $stats['new_contacts'] }} new
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Quick Actions -->
@@ -186,6 +210,31 @@
                                     <p class="text-sm text-gray-600">Upload and organize images</p>
                                 </div>
                             </div>
+                        </a>
+
+                        <!-- Contact Management -->
+                        <a href="{{ route('admin.contacts') }}"
+                            class="group block p-6 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border border-indigo-100 hover:border-indigo-200 transition-all duration-200 hover:shadow-lg relative">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Manage Contacts</h4>
+                                    <p class="text-sm text-gray-600">View and reply to messages</p>
+                                </div>
+                            </div>
+                            @if ($stats['new_contacts'] > 0)
+                                <div
+                                    class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                                    {{ $stats['new_contacts'] }}
+                                </div>
+                            @endif
                         </a>
 
                         <!-- More actions placeholder -->
