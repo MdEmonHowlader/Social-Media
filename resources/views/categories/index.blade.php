@@ -1,10 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-6 shadow-lg">
-            <h2 class="font-bold text-2xl leading-tight">
-                {{ __('Browse Categories') }}
-            </h2>
-            <p class="mt-2 text-blue-100">Discover content organized by topics</p>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-2xl leading-tight">
+                        {{ __('Browse Categories') }}
+                    </h2>
+                    <p class="mt-2 text-blue-100">Discover content organized by topics</p>
+                </div>
+                <a href="{{ route('dashboard') }}" 
+                   class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition duration-200 backdrop-blur-sm border border-white/30">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Dashboard
+                </a>
+            </div>
         </div>
     </x-slot>
 

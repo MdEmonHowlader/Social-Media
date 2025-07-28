@@ -1,10 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6 shadow-lg">
-            <h2 class="font-bold text-2xl leading-tight">
-                {{ __('Categories Management') }}
-            </h2>
-            <p class="mt-2 text-purple-100">Add, edit, and manage content categories</p>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-2xl leading-tight">
+                        {{ __('Categories Management') }}
+                    </h2>
+                    <p class="mt-2 text-purple-100">Add, edit, and manage content categories</p>
+                </div>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition duration-200 backdrop-blur-sm border border-white/30">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to Dashboard
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -63,18 +75,6 @@
                                 </div>
                             </form>
                         </div>
-                    </div>
-
-                    <!-- Back to Admin Dashboard -->
-                    <div class="mt-6">
-                        <a href="{{ route('admin.dashboard') }}"
-                            class="w-full inline-flex items-center justify-center px-6 py-3 bg-gray-100 border border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            Back to Admin Dashboard
-                        </a>
                     </div>
                 </div>
 

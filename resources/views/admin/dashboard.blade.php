@@ -1,10 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg p-6 shadow-lg">
-            <h2 class="font-bold text-2xl leading-tight">
-                {{ __('Admin Dashboard') }}
-            </h2>
-            <p class="mt-2 text-purple-100">Manage your application from here</p>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-2xl leading-tight">
+                        {{ __('Admin Dashboard') }}
+                    </h2>
+                    <p class="mt-2 text-purple-100">Manage your application from here</p>
+                </div>
+                <a href="{{ route('dashboard') }}"
+                    class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition duration-200 backdrop-blur-sm border border-white/30">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to User Dashboard
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -31,7 +43,7 @@
             @endif
 
             <!-- Statistics Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
                 <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-100">
                     <div class="p-6">
                         <div class="flex items-center">
@@ -111,6 +123,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-white overflow-hidden shadow-lg rounded-2xl border border-gray-100">
+                    <div class="p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <dt class="text-sm font-medium text-gray-500 truncate">Images</dt>
+                                <dd class="text-2xl font-bold text-gray-900">{{ $stats['total_images'] }}</dd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Quick Actions -->
@@ -137,21 +169,21 @@
                             </div>
                         </a>
 
-                        <!-- Back to Dashboard -->
-                        <a href="{{ route('dashboard') }}"
-                            class="group block p-6 bg-gradient-to-r from-blue-50 to-green-50 rounded-xl border border-blue-100 hover:border-blue-200 transition-all duration-200 hover:shadow-lg">
+                        <!-- Image Management -->
+                        <a href="{{ route('admin.images') }}"
+                            class="group block p-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl border border-orange-100 hover:border-orange-200 transition-all duration-200 hover:shadow-lg">
                             <div class="flex items-center space-x-3">
                                 <div
-                                    class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                    class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h4 class="font-semibold text-gray-900">User Dashboard</h4>
-                                    <p class="text-sm text-gray-600">Return to main dashboard</p>
+                                    <h4 class="font-semibold text-gray-900">Manage Images</h4>
+                                    <p class="text-sm text-gray-600">Upload and organize images</p>
                                 </div>
                             </div>
                         </a>
