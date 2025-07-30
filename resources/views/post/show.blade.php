@@ -2,14 +2,11 @@
     <div class="py-4">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
+                
                 <h1 class="text-5xl mb-4">
                     {{ $post->title }}
                 </h1>
-                @if ($post->category)
-                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full mb-4">
-                        {{ $post->category->name }}
-                    </span>
-                @endif
+              
                 <div class="flex gap-4">
 
                     {{-- <div class="flex flex-col">
@@ -19,6 +16,7 @@
 
                 </div>
                 <div class="flex gap-2 items-center">
+                    <x-user-avatar :user="$post->user" size="w-10 h-10" />
                     <a href="{{ route('profile.show', $post->user->username) }}" class="hover:underline">
                         {{ $post->user->name }}
                     </a>
@@ -48,13 +46,11 @@
                         @endif
                     @endauth
                 </div>
-
+                
                 <div class="flex gap-2 text-gray-500 text-sm">
                     {{ $post->readTime() }} min read
                     &middot;
                     {{ $post->created_at->format('M d, Y') }}
-                   
-
                 </div>
                 <x-clap-button :post="$post" />
 
@@ -64,8 +60,14 @@
                         {{ $post->content }}
                     </div>
                 </div>
+                @if ($post->category)
+                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full mb-4">
+                    
+                    {{ $post->category->name }}
+                </span>
+            @endif
                 {{-- Clap section --}}
-               
+
                 {{-- <div>
                     <button class="bg-gray-100 px-4 py-2 mt-8 rounded-full ">{{ $post ->category->name }}</button>
                 </div> --}}
