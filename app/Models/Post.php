@@ -55,4 +55,79 @@ class Post extends Model
         }
         return null;
     }
+
+    /**
+     * Scope for searching posts by title and content
+     */
+    public function scopeSearch($query, $search)
+    {
+        if ($search) {
+            return $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('content', 'LIKE', "%{$search}%")
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('username', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                        $categoryQuery->where('name', 'LIKE', "%{$search}%");
+                    });
+            });
+        }
+        return $query;
+    }
+
+    /**
+     * Scope for filtering posts by category
+     */
+    public function scopeFilterByCategory($query, $categoryId)
+    {
+        if ($categoryId) {
+            return $query->where('category_id', $categoryId);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope for filtering posts by author
+     */
+    public function scopeFilterByAuthor($query, $authorId)
+    {
+        if ($authorId) {
+            return $query->where('user_id', $authorId);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope for filtering posts by date range
+     */
+    public function scopeFilterByDateRange($query, $startDate = null, $endDate = null)
+    {
+        if ($startDate) {
+            $query->where('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('created_at', '<=', $endDate . ' 23:59:59');
+        }
+        return $query;
+    }
+
+    /**
+     * Scope for sorting posts
+     */
+    public function scopeSortBy($query, $sort = 'latest')
+    {
+        switch ($sort) {
+            case 'oldest':
+                return $query->orderBy('created_at', 'ASC');
+            case 'popular':
+                return $query->withCount('claps')->orderBy('claps_count', 'DESC');
+            case 'title':
+                return $query->orderBy('title', 'ASC');
+            case 'latest':
+            default:
+                return $query->orderBy('created_at', 'DESC');
+        }
+    }
 }

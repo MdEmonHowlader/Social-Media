@@ -11,7 +11,7 @@ class PublicProfileController extends Controller
     {
         $user = User::where('username', $username)->firstOrFail();
 
-        $posts = $user->posts()->latest()->paginate();
+        $posts = $user->posts()->latest()->paginate(10);
 
         return view('profile.show', [
             'user' => $user,

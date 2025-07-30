@@ -96,5 +96,9 @@ Route::middleware('auth')->group(function () {
 // Public routes
 require __DIR__ . '/auth.php';
 
+// Posts routes (public access)
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/posts/search', [PostController::class, 'search'])->name('posts.search');
+
 Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
