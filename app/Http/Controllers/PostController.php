@@ -80,9 +80,23 @@ class PostController extends Controller
             ->orderBy('created_at', 'DESC')
             ->simplePaginate(5);
 
+        // Get categories and authors for filter dropdowns
+        $categories = Category::orderBy('name')->get();
+        $authors = User::select('id', 'name', 'username')->orderBy('name')->get();
+
         return view('post.index', [
             'posts' => $posts,
             'selectedCategory' => $category->id,
+            'categories' => $categories,
+            'authors' => $authors,
+            'filters' => [
+                'search' => null,
+                'category' => $category->id,
+                'author' => null,
+                'start_date' => null,
+                'end_date' => null,
+                'sort' => 'latest',
+            ],
         ]);
     }
 
