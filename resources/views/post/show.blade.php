@@ -38,12 +38,16 @@
                             @else
                                 <form action="{{ route('follow', $post->user) }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="text-blue-500 hover:underline">
+                                    <button @click=followUser{{ $post->user->id }}  type="submit" class="text-blue-500 hover:underline">
                                         Follow
                                     </button>
                                 </form>
                             @endif
                         @endif
+       
+
+            
+
                     @endauth
                 </div>
                 
