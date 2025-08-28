@@ -4,3 +4,17 @@
 
 /* Import AI Chat styles */
 @import './ai-chat.css';
+
+/* Hide fallback forms when JavaScript is enabled */
+[x-cloak] {
+    display: none !important;
+}
+
+.noscript-only {
+    display: none;
+}
+
+/* Show fallback forms only when JavaScript is disabled */
+.no-js .noscript-only {
+    display: block;
+}

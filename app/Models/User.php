@@ -54,6 +54,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'username';
+    }
+
+    /**
      * Check if user is admin
      */
     public function isAdmin(): bool

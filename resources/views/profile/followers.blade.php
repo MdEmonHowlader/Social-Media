@@ -37,7 +37,8 @@
                             @auth
                                 @if (auth()->id() !== $follower->id)
                                     @if (auth()->user()->following->contains($follower))
-                                        <form action="{{ route('unfollow', $follower) }}" method="POST" class="inline">
+                                        <form action="{{ route('unfollow', $follower->username) }}" method="POST"
+                                            class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button
@@ -46,7 +47,8 @@
                                             </button>
                                         </form>
                                     @else
-                                        <form action="{{ route('follow', $follower) }}" method="POST" class="inline">
+                                        <form action="{{ route('follow', $follower->username) }}" method="POST"
+                                            class="inline">
                                             @csrf
                                             <button
                                                 class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors">

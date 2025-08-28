@@ -38,7 +38,9 @@
                         <div class="user-card mt-2">
                             <h3>{{ $user->name }}</h3>
                             <a href="{{ route('followers', $user->username) }}"
-                                class="text-gray-600 hover:text-blue-600 transition-colors">{{ $user->followers->count() }}
+                                class="text-gray-600 hover:text-blue-600 transition-colors">
+                                <span
+                                    data-followers-count="{{ $user->followers->count() }}">{{ $user->followers->count() }}</span>
                                 Followers</a>
                             <a href="{{ route('following', $user->username) }}"
                                 class="text-gray-600 hover:text-blue-600 transition-colors"
@@ -47,21 +49,56 @@
 
                         </div>
 
-                        @if (auth()->id() !== $user->id)
-                            @if (auth()->user()->following->contains($user))
-                                <form action="{{ route('unfollow', $user) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="bg-gray-500 text-white px-4 py-2 rounded">Unfollow</button>
-                                </form>
-                            @else
-                                <form action="{{ route('follow', $user) }}" method="POST">
-                                    @csrf
-                                    <button class="bg-blue-500 text-white px-4 py-2 rounded"
-                                        @click="follow()">Follow</button>
-                                </form>
+                        @auth
+                            @if (auth()->id() !== $user->id)
+                                <div x-data="followSystem('{{ $user->username }}', {{ auth()->user()->following->contains($user) ? 'true' : 'false' }}, {{ $user->followers->count() }})" class="mt-4">
+                                    <!-- JavaScript-enhanced button -->
+                                    <button @click="toggleFollow()" :disabled="isLoading"
+                                        :class="isFollowing ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-500 hover:bg-blue-600'"
+                                        class="text-white px-4 py-2 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        x-show="true">
+                                        <span x-show="!isLoading">
+                                            <span x-show="isFollowing">Unfollow</span>
+                                            <span x-show="!isFollowing">Follow</span>
+                                        </span>
+                                        <span x-show="isLoading">
+                                            <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white inline"
+                                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10"
+                                                    stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                                </path>
+                                            </svg>
+                                            <span x-show="isFollowing">Unfollowing...</span>
+                                            <span x-show="!isFollowing">Following...</span>
+                                        </span>
+                                    </button>
+
+                                    <!-- Fallback forms for no-JS -->
+                                    @if (auth()->user()->following->contains($user))
+                                        <form action="{{ route('unfollow', $user->username) }}" method="POST"
+                                            class="noscript-only">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors">
+                                                Unfollow
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('follow', $user->username) }}" method="POST"
+                                            class="noscript-only">
+                                            @csrf
+                                            <button type="submit"
+                                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors">
+                                                Follow
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             @endif
-                        @endif
+                        @endauth
 
                         <!-- Bio Section -->
                         @if ($user->bio)

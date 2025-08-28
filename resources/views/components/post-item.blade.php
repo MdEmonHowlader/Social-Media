@@ -71,15 +71,14 @@
                 </x-primary-button>
             </a>
         </div>
-        @if ($post->image)
+        @if ($post->image && $post->imageUrl())
             <a
                 href="{{ route('post.show', [
                     'username' => $post->user ? $post->user->username : 'unknown',
                     'post' => $post,
                 ]) }}">
-                <img class="w-48 h-full max-h-64 object-cover rounded-t-lg"
-                    src="{{ $post->imageUrl() ?? asset('images/default-post.jpg') }}" alt="{{ $post->title }}"
-                    onerror="this.src='{{ asset('images/default-post.jpg') }}'" />
+                <img class="w-48 h-full max-h-64 object-cover rounded-r-lg" src="{{ $post->imageUrl() }}"
+                    alt="{{ $post->title }}" onerror="this.parentElement.style.display='none'" />
             </a>
         @else
             <a
@@ -88,7 +87,7 @@
                     'post' => $post,
                 ]) }}">
                 <div
-                    class="w-48 h-full max-h-64 bg-gray-200 dark:bg-gray-700 rounded-t-lg flex items-center justify-center">
+                    class="w-48 h-full max-h-64 bg-gray-200 dark:bg-gray-700 rounded-r-lg flex items-center justify-center">
                     <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">

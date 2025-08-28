@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,8 +20,9 @@ class DatabaseSeeder extends Seeder
     User::factory()->create([
       'name' => 'admin',
       'email' => 'test@gmail.com',
-      'password' => 12345678,
+      'password' => Hash::make('12345678'),
       'username' => 'admin',
+      'role' => 'admin', // Make sure this user is an admin
     ]);
     $categories = [
       'Technology',

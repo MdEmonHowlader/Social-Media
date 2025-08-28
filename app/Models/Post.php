@@ -51,7 +51,14 @@ class Post extends Model
     public function imageUrl()
     {
         if ($this->image) {
-            return Storage::url($this->image);
+            // Check if the image file exists
+            if (Storage::disk('public')->exists($this->image)) {
+                return Storage::url($this->image);
+            } else {
+                // Log missing file
+                \Illuminate\Support\Facades\Log::warning('Post image file not found: ' . $this->image . ' for post ID: ' . $this->id);
+                return null;
+            }
         }
         return null;
     }

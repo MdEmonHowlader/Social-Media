@@ -179,13 +179,25 @@ class PostController extends Controller
         $validated['user_id'] = Auth::id();
         $validated['slug'] = Str::slug($validated['title']);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images', 'public');
+        // Handle image upload
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            try {
+                $image = $request->file('image');
+                $imageName = time() . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+                $validated['image'] = $image->storeAs('images', $imageName, 'public');
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Image upload failed: ' . $e->getMessage());
+                return redirect()->back()->withInput()->withErrors(['image' => 'Failed to upload image. Please try again.']);
+            }
         }
 
-        Post::create($validated);
-
-        return redirect()->route('dashboard')->with('success', 'Post created successfully!');
+        try {
+            Post::create($validated);
+            return redirect()->route('dashboard')->with('success', 'Post created successfully!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Post creation failed: ' . $e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to create post. Please try again.']);
+        }
     }
 
     /**

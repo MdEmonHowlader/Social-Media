@@ -26,6 +26,16 @@ class FollowController extends Controller
             $user->notify(new NewFollowerNotification($currentUser));
         }
 
+        // Return JSON for AJAX requests
+        if (request()->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Successfully followed ' . $user->name,
+                'following' => true,
+                'followers_count' => $user->followers()->count()
+            ]);
+        }
+
         return back();
     }
 
@@ -39,6 +49,16 @@ class FollowController extends Controller
         }
 
         $currentUser->following()->detach($user->id);
+
+        // Return JSON for AJAX requests
+        if (request()->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Successfully unfollowed ' . $user->name,
+                'following' => false,
+                'followers_count' => $user->followers()->count()
+            ]);
+        }
 
         return back();
     }
